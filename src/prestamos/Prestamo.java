@@ -26,4 +26,20 @@ public class Prestamo {
                 ", FechaDevolucion = " + fechaDevolucion + "]";
     }
 
+    public int getCodigoLibro() {return codigoLibro;}
+    public void setCodigoLibro(int codigoLibro) {this.codigoLibro = codigoLibro;}
+    public int getCodigoSocio() {return codigoSocio;}
+    public void setCodigoSocio(int codigoSocio) {this.codigoSocio = codigoSocio;}
+    public String getFechaInicio() {return fechaInicio;}
+    public void setFechaInicio(String fechaInicio) {this.fechaInicio = fechaInicio;}
+    public String getFechaFin() {return fechaFin;}
+    public void setFechaFin(String fechaFin) {this.fechaFin = fechaFin;}
+    public String getFechaDevolucion() {return fechaDevolucion;}
+    public void setFechaDevolucion(String fechaDevolucion) {this.fechaDevolucion = fechaDevolucion;}
+
+    public static void main(String[] args) {
+        Prestamo p = new Prestamo(2, 1, "10/01/2022", "24/01/2022", "21/01/2022");
+        System.out.println(p);
+    }
+
 }
