@@ -206,6 +206,8 @@ public class Main {
                                     System.out.println(AccesoSocio.toStringList(socios));
                                     System.out.println("Se han encontrado " + socios.size() + " socios en la base de datos.");
                                     break;
+                                default:
+                                    System.out.println("La opción de menú debe estar comprendida entre 0 y 6.");
                             }
 
                         } while (opSocio != 0);
