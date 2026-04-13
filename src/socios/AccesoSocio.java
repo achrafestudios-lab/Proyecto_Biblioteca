@@ -251,7 +251,6 @@ public class AccesoSocio {
         for(Socio socioAux : socios) {
             cadena += socioAux + "\n";
         }
-
         return cadena;
     }
 }
