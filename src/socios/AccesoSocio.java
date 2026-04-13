@@ -8,7 +8,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -119,7 +118,7 @@ public class AccesoSocio {
         return socios;
     }
 
-    public static List<Socio> consultarSociosPorLocalidad(String localidad) throws SociosException {
+    public static List<Socio> consultarSociosPorLocalidadOrdenadoPorNombreAsc(String localidad) throws SociosException {
         List<Socio> socios = new LinkedList<>();
         Connection conexion = null;
         PreparedStatement ps;
@@ -127,7 +126,7 @@ public class AccesoSocio {
         try {
             conexion = ConfigMySql.abrirConexion();
 
-            String query = "SELECT * FROM socio WHERE localidad = ?";
+            String query = "SELECT * FROM socio WHERE localidad = ? ORDER BY nombre ASC";
             ps=conexion.prepareStatement(query);
 
             ps.setString(1, localidad);
@@ -147,7 +146,7 @@ public class AccesoSocio {
             }
 
             if(socios.isEmpty()) {
-                throw new SQLException(SociosException.SOCIOS_NO_ENCONTRADOS);
+                throw new SQLException(SociosException.SOCIOS_NO_ENCONTRADOS_LOCALIDAD);
             }
         }catch (SQLException e) {
             throw new BDException(BDException.ERROR_QUERY + e.getMessage());
@@ -170,7 +169,7 @@ public class AccesoSocio {
         try{
             conexion = ConfigMySql.abrirConexion();
 
-            String query = "SELECT * FROM socio";
+            String query = "SELECT * FROM socios WHERE codigo NOT IN (SELECT codigo_socio FROM prestamos)";
 
             ps = conexion.prepareStatement(query);
 
@@ -189,7 +188,7 @@ public class AccesoSocio {
             }
 
             if(socios.isEmpty()) {
-                return null;
+                throw  new SQLException(SociosException.SOCIOS_NO_ENCONTRADOS_SIN_PRESTAMOS);
             }
         }catch (SQLException e) {
             throw new BDException(BDException.ERROR_QUERY + e.getMessage());
@@ -212,7 +211,7 @@ public class AccesoSocio {
         try{
             conexion = ConfigMySql.abrirConexion();
 
-            String query = "SELECT * FROM socio WHERE fecha = ?";
+            String query = "SELECT * FROM socio WHERE codigo IN (SELECT codigo_socio FROM prestamo WHERE fecha_inicio = ?)";
             ps = conexion.prepareStatement(query);
             ps.setString(1, fecha);
 
@@ -231,7 +230,7 @@ public class AccesoSocio {
             }
 
             if(socios.isEmpty()) {
-                throw new SociosException(SociosException.SOCIOS_NO_ENCONTRADOS);
+                throw new SociosException(SociosException.SOCIOS_NO_ENCONTRADOS_CON_PRESTAMOS);
             }
         }catch (SQLException e) {
             throw new BDException(BDException.ERROR_QUERY + e.getMessage());
