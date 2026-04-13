@@ -58,7 +58,7 @@ public class AccesoSocio {
             ps.setInt(1, codigo);
             ResultSet rs = ps.executeQuery();
 
-            if (!rs.isAfterLast()) {
+            if (rs.next()) {
                 throw new SociosException(SociosException.SOCIOS_REFERENCIADO_EN_PRESTAMO);
             }
 
