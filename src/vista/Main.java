@@ -165,7 +165,10 @@ public class Main {
 
                             case 3:
                                 System.out.println("Consultando todos los socios de la base de datos...");
+                                socios = AccesoSocio.consultarSocios();
 
+                                System.out.println(AccesoSocio.toStringList(socios));
+                                System.out.println("Se han encontrado " + socios.size() + " socios en la  base de datos.");
                                 break;
 
                             case 4:
@@ -180,10 +183,12 @@ public class Main {
                                 break;
 
                             case 6:
-                                System.out.print("Consultando los socios con préstamos en una fecha de la base de datos...");
-
+                                System.out.println("Consultando los socios con préstamos en una fecha de la base de datos...");
                                 String fechaPrestamo = Teclado.leerCadena("Fecha: ");
+                                socios = AccesoSocio.consultarSociosPorPrestamoEnFecha(fechaPrestamo);
 
+                                System.out.println(AccesoSocio.toStringList(socios));
+                                System.out.println("Se han encontrado " +  socios.size() + " socios en la base de datos.");
                                 break;
                         }
 
