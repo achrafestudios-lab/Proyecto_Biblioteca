@@ -1,6 +1,6 @@
 package exception;
 
-public class SociosException extends RuntimeException {
+public class SociosException extends Exception {
     public static final String SOCIO_INEXISTENTE = "No existe ningún socio con ese código en la base de datos.";
     public static final String SOCIOS_NO_ENCONTRADOS = "No se ha encontrado ningún socio en la base de datos.";
     public static final String SOCIOS_NO_ENCONTRADOS_LOCALIDAD = "No existe ningún socio con esa localidad en la base de datos.";
