@@ -46,7 +46,7 @@ public class AccesoSocio {
         return true;
     }
 
-    public static void eliminarSocio(int codigo) {
+    public static void eliminarSocio(int codigo) throws SociosException {
         Connection conexion = null;
         PreparedStatement ps;
 
@@ -208,7 +208,7 @@ public class AccesoSocio {
         return socios;
     }
 
-    public static List<Socio> consultarSociosPorPrestamoEnFecha(String fecha) {
+    public static List<Socio> consultarSociosPorPrestamoEnFecha(String fecha) throws SociosException{
         List<Socio> socios = new LinkedList<>();
         Connection conexion = null;
         PreparedStatement ps;
