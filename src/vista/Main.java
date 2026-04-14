@@ -2,7 +2,10 @@ package vista;
 
 import entrada.Teclado;
 import exception.BDException;
+import exception.PrestamosException;
 import exception.SociosException;
+import prestamos.AccesoPrestamo;
+import prestamos.Prestamo;
 import socios.AccesoSocio;
 import socios.Socio;
 
@@ -70,7 +73,10 @@ public class Main {
     public static void main(String[] args) {
         int opcion;
         List<Socio> socios;
+        List<Prestamo> prestamos;
         Socio socio;
+        Prestamo prestamo;
+        List<List<String>> contenido;
 
         do {
             opcion = menuPrincipal();
@@ -242,17 +248,29 @@ public class Main {
 
                                 case 4:
                                     System.out.println("Consultando todos los préstamos de la base de datos...");
+                                    prestamos = AccesoPrestamo.consultarPrestamos();
 
+                                    System.out.println(AccesoPrestamo.toStringList(prestamos));
+                                    System.out.println("Se han consultado " + prestamos.size() + " prestamos en la base de datos.");
                                     break;
 
                                 case 5:
                                     System.out.println("Consultando los préstamos no devueltos de la base de datos....");
-                                    break;
+                                    prestamos = AccesoPrestamo.consultarPrestamosNoDevueltos();
 
+                                    System.out.println(AccesoPrestamo.toStringList(prestamos));
+                                    System.out.println("Se han consultado " + prestamos.size() + " prestamos en la base de datos.");
+                                    break;
                                 case 6:
-                                    System.out.print("Consultando DNI y nombre de socio, ISBN y título de libro y fecha de devolución de los préstamos realizados en una fecha de la base de datos...");
+                                    System.out.println("Consultando DNI y nombre de socio, ISBN y título de libro y fecha de devolución de los préstamos realizados en una fecha de la base de datos...");
+                                    String fechaInicio = Teclado.leerCadena("Fecha inicio: ");
+                                    contenido = AccesoPrestamo.consultarPrestamosPorFechaInicio(fechaInicio);
 
+                                    System.out.println(AccesoPrestamo.toStringList(contenido));
+                                    System.out.println("Se han consultado " + contenido.size() + " prestamos en la base de datos.");
                                     break;
+                                default:
+                                    System.out.println("La opción de menú debe estar comprendida entre 0 y 6.");
                             }
 
                         } while (opPrestamo != 0);
@@ -261,7 +279,7 @@ public class Main {
                     default:
                         System.out.println("La opción de menú debe estar comprendida entre 0 y 3.");
                 }
-            } catch (BDException | SociosException e) {
+            } catch (BDException | SociosException | PrestamosException e) {
                 System.err.println(e.getMessage());
             }
         } while (opcion != 0);
