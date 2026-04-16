@@ -110,6 +110,10 @@ public class AccesoPrestamo {
             ps.setString(1, fechaInicio);
             ResultSet rs = ps.executeQuery();
 
+            if(rs.isAfterLast()){
+                throw new PrestamosException(PrestamosException.PRESTAMOS_INEXISTENTE_POR_FECHA);
+            }
+
             while (rs.next()) {
                 List<String> consultar = new ArrayList<>();
                 String dni = rs.getString("dni");
