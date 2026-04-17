@@ -222,7 +222,7 @@ public class Main {
                     case 3:
                         int opPrestamo;
                         do {
-                            opPrestamo = menuSocios();
+                            opPrestamo = menuPrestamos();
 
                             if (opPrestamo < 0 || opPrestamo > 6) {
                                 System.out.println("La opción de menú debe estar comprendida entre 0 y 6.");
