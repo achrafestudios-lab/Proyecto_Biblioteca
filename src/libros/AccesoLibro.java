@@ -2,6 +2,7 @@ package libros;
 
 import config.ConfigMySql;
 import exception.BDException;
+import exception.LibroException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -60,23 +61,33 @@ public class AccesoLibro {
 
     /**
      *
-     * @param codigo Pide el codigo de un libro
-     * @return Devuelve true si se ha eliminado el libro de lo contrast false
+     * @param isbn Pide un ISBN al usuario
      * @throws BDException Gestion de exceptions
+     * @throws LibroException Gestion de exceptions
      */
-    public static boolean eliminarLibro(int codigo) throws BDException {
+    public static void eliminarLibro(String isbn) throws BDException, LibroException {
         PreparedStatement ps;
         Connection conexion = null;
 
         try {
             conexion = ConfigMySql.abrirConexion();
-            String query = "DELETE FROM libro WHERE codigo = ?";
-            ps = conexion.prepareStatement(query);
-            ps.setInt(1, codigo);
+
+            String query1 = "SELECT * FROM prestamo WHERE codigo_libro = (SELECT codigo FROM libro WHERE isbn = ?))";
+            ps = conexion.prepareStatement(query1);
+            ps.setString(1, isbn);
+            ResultSet rs = ps.executeQuery();
+
+            if(rs.next()) {
+                throw new LibroException(LibroException.ERROR_LIBRO_HA_SIDO_PRESTADO);
+            }
+
+            String query2 = "DELETE FROM libro WHERE codigo = (SELECT codigo FROM libro WHERE isbn = ?)";
+            ps = conexion.prepareStatement(query2);
+            ps.setString(1, isbn);
 
             int resultado = ps.executeUpdate();
             if (resultado == 0) {
-                return false;
+                throw new LibroException(LibroException.ERROR_NO_EXISTE_EL_LIBRO);
             }
         } catch (SQLException e) {
             // TODO Auto-generated catch block
@@ -86,8 +97,6 @@ public class AccesoLibro {
                 ConfigMySql.cerrarConexion(conexion);
             }
         }
-
-        return true;
     }
 
     /**
@@ -109,18 +118,7 @@ public class AccesoLibro {
 
             ResultSet resultados = ps.executeQuery();
 
-            while (resultados.next()) {
-                int codigo = resultados.getInt("codigo");
-                String isbn = resultados.getString("isbn");
-                String titulo = resultados.getString("titulo");
-                String escritor = resultados.getString("escritor");
-                int anio_publicaccion = resultados.getInt("anio_publicacion");
-                double puntuacion = resultados.getDouble("puntuacion");
-
-                Libro LibroAux = new Libro(codigo, isbn, titulo, escritor, anio_publicaccion, puntuacion);
-
-                LibrosAux.add(LibroAux);
-            }
+            crearLibro(LibrosAux, resultados);
         } catch (SQLException e) {
             throw new BDException(BDException.ERROR_QUERY + e.getMessage());
         } catch (BDException e) {
@@ -153,18 +151,7 @@ public class AccesoLibro {
 
             ResultSet resultados = ps.executeQuery();
 
-            while (resultados.next()) {
-                int codigo = resultados.getInt("codigo");
-                String isbn = resultados.getString("isbn");
-                String titulo = resultados.getString("titulo");
-                String escritor = resultados.getString("escritor");
-                int anio_publicaccion = resultados.getInt("anio_publicacion");
-                double puntuacion = resultados.getDouble("puntuacion");
-
-                Libro LibroAux = new Libro(codigo, isbn, titulo, escritor, anio_publicaccion, puntuacion);
-
-                LibrosAux.add(LibroAux);
-            }
+            crearLibro(LibrosAux, resultados);
         } catch (SQLException e) {
             throw new BDException(BDException.ERROR_QUERY + e.getMessage());
         } catch (BDException e) {
@@ -194,19 +181,7 @@ public class AccesoLibro {
 
             ResultSet resultados = ps.executeQuery();
 
-            while (resultados.next()) {
-                int codigo = resultados.getInt("codigo");
-                String isbn = resultados.getString("isbn");
-                String titulo = resultados.getString("titulo");
-                String escritor = resultados.getString("escritor");
-                int anio_publicaccion = resultados.getInt("anio_publicacion");
-                double puntuacion = resultados.getDouble("puntuacion");
-
-                Libro LibroAux = new Libro(codigo, isbn, titulo, escritor, anio_publicaccion, puntuacion);
-
-                LibrosAux.add(LibroAux);
-
-            }
+            crearLibro(LibrosAux, resultados);
 
         } catch (
                 SQLException e) {
@@ -223,6 +198,55 @@ public class AccesoLibro {
         return LibrosAux;
     }
 
+    /**
+     *
+     * @param fecha_devolucion Pide una fecha para consultar todos los libros
+     * @return Da una lista con todos los libros por fecha
+     * @throws BDException Gestion de exceptions
+     * @throws LibroException Gestion de exceptions
+     */
+    public static List<Libro> consultarDevueltosPorFecha(String fecha_devolucion)throws BDException, LibroException{
+        List<Libro> LibrosAux = new ArrayList<>();
+        PreparedStatement ps;
+        Connection conexion = null;
+        try {
+            conexion = ConfigMySql.abrirConexion();
+
+            String query ="SELECT libro.* FROM libro JOIN prestamo ON (libro.codigo = prestamo.codigo_libro) WHERE prestamo.fecha_devolucion = ?";
+            ps = conexion.prepareStatement(query);
+            ps.setString(1, fecha_devolucion);
+            ResultSet resultados = ps.executeQuery();
+
+            crearLibro(LibrosAux, resultados);
+
+        } catch (SQLException e) {
+            throw new BDException(BDException.ERROR_QUERY + e.getMessage());
+        } catch (BDException e) {
+            throw new BDException(BDException.ERROR_ABRIR_CONEXION + e.getMessage());
+        } finally {
+            if (conexion != null) {
+                ConfigMySql.cerrarConexion(conexion);
+            }
+        }
+        return LibrosAux;
+    }
+
+    private static void crearLibro(List<Libro> librosAux, ResultSet resultados) throws SQLException {
+        while (resultados.next()) {
+            int codigo = resultados.getInt("codigo");
+            String isbn = resultados.getString("isbn");
+            String titulo = resultados.getString("titulo");
+            String escritor = resultados.getString("escritor");
+            int anio_publicaccion = resultados.getInt("anio_publicacion");
+            double puntuacion = resultados.getDouble("puntuacion");
+
+            Libro LibroAux = new Libro(codigo, isbn, titulo, escritor, anio_publicaccion, puntuacion);
+
+            librosAux.add(LibroAux);
+
+        }
+    }
+
     public static void main(String[] args) {
         System.out.println(consultarTodosLibros());
 
@@ -230,10 +254,6 @@ public class AccesoLibro {
 
         if (insertarLibros(libro)) {
             System.out.println("Libro insertado correctamente");
-        }
-
-        if (eliminarLibro(5)) {
-            System.out.println("Libro eliminado correctamente");
         }
 
         System.out.println(consultarLibrosPorAutorYPuntuacionDes("Achraf Diaz"));
