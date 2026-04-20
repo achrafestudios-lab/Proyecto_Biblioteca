@@ -269,7 +269,7 @@ public class Main {
                 case 3:
                     int opPrestamo;
                     do {
-                        opPrestamo = menuSocios();
+                        opPrestamo = menuPrestamos();
 
                         if (opPrestamo < 0 || opPrestamo > 6) {
                             System.out.println("La opción de menú debe estar comprendida entre 0 y 6.");
@@ -348,7 +348,7 @@ public class Main {
                     default:
                         System.out.println("La opción de menú debe estar comprendida entre 0 y 3.");
                 }
-            } catch (BDException | SociosException | PrestamosException e) {
+            } catch (BDException | SociosException | PrestamosException | LibroException e) {
                 System.err.println(e.getMessage());
             }
 
