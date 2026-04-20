@@ -174,10 +174,9 @@ public class Main {
                                     break;
                                 case 2:
                                     System.out.println("Eliminando un socio, por código, de la base de datos....");
-                                    int codigoSocio = Teclado.leerEntero("Código socio: ");
+                                    dni = Teclado.leerCadena("DNI socio: ");
 
-                                    AccesoSocio.eliminarSocio(codigoSocio);
-
+                                    AccesoSocio.eliminarSocio(dni);
                                     System.out.println("Se ha eliminado un socio de la base de datos.");
                                     break;
                                 case 3:
