@@ -46,25 +46,25 @@ public class AccesoSocio {
         return true;
     }
 
-    public static void eliminarSocio(int codigo) throws SociosException {
+    public static void eliminarSocio(String dni) throws SociosException {
         Connection conexion = null;
         PreparedStatement ps;
 
         try {
             conexion = ConfigMySql.abrirConexion();
 
-            String query1 = "SELECT * FROM prestamo WHERE codigo_socio = ?";
+            String query1 = "SELECT * FROM prestamo WHERE codigo_socio = (SELECT codigo FROM socio WHERE dni = ?)";
             ps = conexion.prepareStatement(query1);
-            ps.setInt(1, codigo);
+            ps.setString(1, dni);
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
                 throw new SociosException(SociosException.SOCIOS_REFERENCIADO_EN_PRESTAMO);
             }
 
-            String query2 = "DELETE FROM socio WHERE codigo = ?";
+            String query2 = "DELETE FROM socio WHERE dni = ?";
             ps = conexion.prepareStatement(query2);
-            ps.setInt(1, codigo);
+            ps.setString(1, dni);
 
             int eliminado = ps.executeUpdate();
 
