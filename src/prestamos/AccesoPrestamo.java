@@ -93,8 +93,8 @@ public class AccesoPrestamo {
         return prestamos;
     }
 
-    public static List<List<String>> consultarPrestamosPorFechaInicio(String fechaInicio) throws PrestamosException {
-        List<List<String>> prestamos = new LinkedList<>();
+    public static List<ConsultarPrestamosPorFechaInicio> consultarPrestamosPorFechaInicio(String fechaInicio) throws PrestamosException {
+        List<ConsultarPrestamosPorFechaInicio> prestamos = new LinkedList<>();
         Connection conexion = null;
         PreparedStatement ps;
         try {
@@ -114,19 +114,13 @@ public class AccesoPrestamo {
             }
 
             while (rs.next()) {
-                List<String> consultar = new ArrayList<>();
                 String dni = rs.getString("dni");
-                consultar.add(dni);
                 String nombre = rs.getString("nombre");
-                consultar.add(nombre);
                 String isbn = rs.getString("isbn");
-                consultar.add(isbn);
                 String titulo = rs.getString("titulo");
-                consultar.add(titulo);
                 String fechaDevolucion = rs.getString("fecha_devolucion");
-                consultar.add(fechaDevolucion);
-
-                prestamos.add(consultar);
+                ConsultarPrestamosPorFechaInicio aux = new ConsultarPrestamosPorFechaInicio(dni, nombre, isbn, titulo, fechaDevolucion);
+                prestamos.add(aux);
             }
         }catch (SQLException e) {
             throw new BDException(BDException.ERROR_QUERY + e.getMessage());
