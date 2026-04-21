@@ -72,7 +72,7 @@ public class AccesoLibro {
         try {
             conexion = ConfigMySql.abrirConexion();
 
-            String query1 = "SELECT * FROM prestamo WHERE codigo_libro = (SELECT codigo FROM libro WHERE isbn = ?))";
+            String query1 = "SELECT * FROM prestamo WHERE codigo_libro = (SELECT codigo FROM libro WHERE isbn = ?)";
             ps = conexion.prepareStatement(query1);
             ps.setString(1, isbn);
             ResultSet rs = ps.executeQuery();
@@ -81,7 +81,7 @@ public class AccesoLibro {
                 throw new LibroException(LibroException.ERROR_LIBRO_HA_SIDO_PRESTADO);
             }
 
-            String query2 = "DELETE FROM libro WHERE codigo = (SELECT codigo FROM libro WHERE isbn = ?)";
+            String query2 = "DELETE FROM libro WHERE isbn = ?";
             ps = conexion.prepareStatement(query2);
             ps.setString(1, isbn);
 
