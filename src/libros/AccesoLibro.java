@@ -132,6 +132,40 @@ public class AccesoLibro {
         return LibrosAux;
     }
 
+    public static List<Libro> consultarPorTituloSinPrestar(String titulo) throws BDException, LibroException {
+        List<Libro> librosAux = new ArrayList<>();
+        PreparedStatement ps;
+        Connection conexion = null;
+        titulo = titulo.toLowerCase();
+
+        try {
+            conexion = ConfigMySql.abrirConexion();
+
+            String query = "SELECT * FROM libro WHERE LOWER(titulo) LIKE ?" +
+                    " AND codigo NOT IN (SELECT codigo_libro FROM prestamo WHERE fecha_devolucion IS NULL)";
+            ps = conexion.prepareStatement(query);
+            ps.setString(1, "%" + titulo + "%");
+
+            ResultSet resultados = ps.executeQuery();
+
+            crearLibro(librosAux, resultados);
+
+            if(librosAux.isEmpty()){
+                throw new LibroException(LibroException.ERROR_NO_EXISTE_EL_LIBRO_NOMBRE);
+            }
+        } catch (SQLException e) {
+            throw new BDException(BDException.ERROR_QUERY + e.getMessage());
+        } catch (BDException e) {
+            throw new BDException(BDException.ERROR_ABRIR_CONEXION + e.getMessage());
+        } finally {
+            if (conexion != null) {
+                ConfigMySql.cerrarConexion(conexion);
+            }
+        }
+
+        return librosAux;
+    }
+
     /**
      *
      * @param autor Autor para filtrar
@@ -142,12 +176,14 @@ public class AccesoLibro {
         List<Libro> LibrosAux = new ArrayList<>();
         PreparedStatement ps;
         Connection conexion = null;
+        autor = autor.toLowerCase();
+
         try {
             conexion = ConfigMySql.abrirConexion();
-            String query = "SELECT * FROM libro WHERE escritor = ? ORDER BY puntuacion DESC";
+            String query = "SELECT * FROM libro WHERE LOWER(escritor) LIKE ? ORDER BY puntuacion DESC";
 
             ps = conexion.prepareStatement(query);
-            ps.setString(1, autor);
+            ps.setString(1, "%" + autor + "%");
 
             ResultSet resultados = ps.executeQuery();
 

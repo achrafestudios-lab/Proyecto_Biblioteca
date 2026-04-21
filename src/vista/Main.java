@@ -80,6 +80,7 @@ public class Main {
         String ciudad;
         String fecha;
         String isbn;
+        String titulo;
         int anio;
         double puntuacion;
         boolean validado;
@@ -126,7 +127,7 @@ public class Main {
                                         }
                                     }while(!validado);
 
-                                    String titulo = Teclado.leerCadena("Titulo: ");
+                                    titulo = Teclado.leerCadena("Titulo: ");
                                     String escritor = Teclado.leerCadena("Escritor: ");
 
                                     do{
@@ -353,7 +354,12 @@ public class Main {
                                     System.out.println("Saliendo del programa...");
                                     break;
                                 case 1:
-                                    System.out.print("Insertando un préstamo en la base de datos...");
+                                    System.out.println("Insertando un préstamo en la base de datos...");
+                                    titulo = Teclado.leerCadena("Titulo: ");
+                                    libros = AccesoLibro.consultarPorTituloSinPrestar(titulo);
+
+                                    System.out.println(AccesoLibro.toStringList(libros));
+
                                     do{
                                         isbn = Teclado.leerCadena("ISBN: ");
                                         validado = Validaciones.validarISBN(isbn);
@@ -379,6 +385,17 @@ public class Main {
                                 case 2:
                                     System.out.println("Actualizando un préstamo, por datos identificativos, de la base de datos...");
                                     do{
+                                        dni = Teclado.leerCadena("DNI: ");
+                                        validado = Validaciones.validarDNI(dni);
+
+                                        if(!validado){
+                                            System.err.println("DNI invalido.");
+                                        }
+                                    }while (!validado);
+
+
+
+                                    do{
                                         isbn = Teclado.leerCadena("ISBN: ");
                                         validado = Validaciones.validarISBN(isbn);
 
@@ -387,15 +404,6 @@ public class Main {
                                             System.err.println("La ISBN debe tener 13 digitos");
                                         }
                                     }while(!validado);
-
-                                    do{
-                                        dni = Teclado.leerCadena("DNI: ");
-                                        validado = Validaciones.validarDNI(dni);
-
-                                        if(!validado){
-                                            System.err.println("DNI invalido.");
-                                        }
-                                    }while (!validado);
 
                                     String fecha_inicio = Teclado.leerCadena("Fecha inicio de prestamo: ");
 

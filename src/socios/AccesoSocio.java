@@ -2,7 +2,9 @@ package socios;
 
 import config.ConfigMySql;
 import exception.BDException;
+import exception.PrestamosException;
 import exception.SociosException;
+import prestamos.Prestamo;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -127,14 +129,15 @@ public class AccesoSocio {
         List<Socio> socios = new LinkedList<>();
         Connection conexion = null;
         PreparedStatement ps;
+        localidad = localidad.toLowerCase();
 
         try {
             conexion = ConfigMySql.abrirConexion();
 
-            String query = "SELECT * FROM socio WHERE domicilio = ? ORDER BY nombre ASC";
+            String query = "SELECT * FROM socio WHERE LOWER(domicilio) like ? ORDER BY nombre ASC";
             ps = conexion.prepareStatement(query);
 
-            ps.setString(1, localidad);
+            ps.setString(1, "%" + localidad + "%");
 
             ResultSet rs = ps.executeQuery();
 
@@ -166,6 +169,51 @@ public class AccesoSocio {
         return socios;
     }
 
+    public static List<Prestamo> consultarLibrosPorDNI(String dni) throws PrestamosException {
+        List<Prestamo> prestamos = new LinkedList<>();
+        Connection conexion = null;
+        PreparedStatement ps;
+        dni = dni.toLowerCase();
+
+        try {
+            conexion = ConfigMySql.abrirConexion();
+
+            String query = "SELECT * FROM libro WHERE fecha_devolucion IS NULL" +
+                    " JOIN prestamo ";
+            ps = conexion.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int codigoLibro = rs.getInt("codigo_Libro");
+                int codigoSocio = rs.getInt("codigo_socio");
+                String fechaInicio = rs.getString("fecha_inicio");
+                String fechaFin = rs.getString("fecha_fin");
+                String fechaDevolucion = rs.getString("fecha_devolucion");
+
+                Prestamo prestamoAux = new Prestamo(codigoLibro, codigoSocio, fechaInicio, fechaFin, fechaDevolucion);
+                prestamos.add(prestamoAux);
+            }
+
+            if(prestamos.isEmpty()){
+                throw new PrestamosException(PrestamosException.PRESTAMOS_NO_DEVUELTOS_INEXISTENTES);
+            }
+        }catch (SQLException e) {
+            throw new BDException(BDException.ERROR_QUERY + e.getMessage());
+        } catch (BDException e) {
+            throw new BDException(BDException.ERROR_ABRIR_CONEXION + e.getMessage());
+        } finally {
+            if (conexion != null) {
+                ConfigMySql.cerrarConexion(conexion);
+            }
+        }
+
+        return prestamos;
+    }
+
+    /**
+     *
+     * @return Socios sin prestamos
+     */
     public static List<Socio> consultarSociosSinPrestamos() {
         List<Socio> socios = new LinkedList<>();
         Connection conexion = null;
