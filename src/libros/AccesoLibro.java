@@ -21,7 +21,7 @@ public class AccesoLibro {
      */
     public static boolean insertarLibros(Libro libro) throws BDException {
         Connection conexion = null;
-        int columnasInsertadas = 0;
+        int columnasInsertadas;
 
         try {
             conexion = ConfigMySql.abrirConexion();
