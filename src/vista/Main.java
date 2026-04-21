@@ -112,6 +112,9 @@ public class Main {
                             opLibro = menuLibros();
 
                             switch (opLibro) {
+                                case 0:
+                                    System.out.println("Saliendo del programa...");
+                                    break;
                                 case 1:
                                     System.out.println("Insertando un libro en la base de datos...");
                                     int codigoNuevo = Teclado.leerEntero("Codigo: ");
@@ -240,6 +243,9 @@ public class Main {
                             opSocio = menuSocios();
 
                             switch (opSocio) {
+                                case 0:
+                                    System.out.println("Saliendo del programa...");
+                                    break;
                                 case 1:
                                     System.out.println("Insertando un socio en la base de datos...");
                                     do{
@@ -354,6 +360,9 @@ public class Main {
                             opPrestamo = menuPrestamos();
 
                             switch (opPrestamo) {
+                                case 0:
+                                    System.out.println("Saliendo del programa...");
+                                    break;
                                 case 1:
                                     System.out.print("Insertando un préstamo en la base de datos...");
                                     do{
