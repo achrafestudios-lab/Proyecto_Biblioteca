@@ -80,13 +80,17 @@ public class Main {
         String telefono;
         String correo;
         String ciudad;
-        String fechaPrestamo;
+        String fecha;
+        String isbn;
+        int anio;
+        double puntuacion;
         boolean validado;
 
         List<Socio> socios;
         List<Prestamo> prestamos;
+        List<Libro> libros;
         Socio socio;
-        Prestamo prestamo;
+        Libro libro;
         List<List<String>> contenido;
 
         int opcion;
@@ -106,116 +110,143 @@ public class Main {
                         do {
                             opLibro = menuLibros();
 
-                            if (opLibro < 0 || opLibro > 6) {
-                                System.out.println("La opción de menú debe estar comprendida entre 0 y 6.");
-                                continue;
-                            }
-
                             switch (opLibro) {
-
                                 case 1:
                                     System.out.println("Insertando un libro en la base de datos...");
                                     int codigoNuevo = Teclado.leerEntero("Codigo: ");
-                                    String isbn = Teclado.leerCadena("ISBN: ");
+
+                                    do{
+                                        isbn = Teclado.leerCadena("ISBN: ");
+                                        validado = Validaciones.validarISBN(isbn);
+
+                                        if (!validado) {
+                                            System.err.println("La ISBN debe comenzar con 978 o 979.");
+                                            System.err.println("La ISBN debe tener 13 digitos");
+                                        }
+                                    }while(!validado);
+
                                     String titulo = Teclado.leerCadena("Titulo: ");
                                     String escritor = Teclado.leerCadena("Escritor: ");
-                                    int anio = Teclado.leerEntero("Año: ");
-                                    double puntuacion = Teclado.leerNatural("Puntuación: ");
 
-                                    Libro libroNuevo = new Libro(codigoNuevo, isbn, titulo, escritor, anio, puntuacion);
-                                    boolean insertado = AccesoLibro.insertarLibros(libroNuevo);
+                                    do{
+                                        anio = Teclado.leerEntero("Año: ");
+                                        validado = Validaciones.validarAnio(anio);
+
+                                        if (!validado) {
+                                            System.err.println("La anio no puede estar incorrecto.");
+                                        }
+                                    }while(!validado);
+
+                                    do{
+                                        puntuacion = Teclado.leerNatural("Puntuación: ");
+                                        validado = Validaciones.validarPuntuacion(puntuacion);
+
+                                        if (!validado) {
+                                            System.err.println("La puntuacion debe estar entre 0 y 10.");
+                                        }
+                                    }while (!validado);
+
+                                    libro = new Libro(codigoNuevo, isbn, titulo, escritor, anio, puntuacion);
+                                    boolean insertado = AccesoLibro.insertarLibros(libro);
+
                                     if (insertado) {
                                         System.out.println("Libro insertado correctamente.");
                                     } else {
-                                        System.out.println("No se ha podido insertar el libro.");
+                                        System.err.println("No se ha podido insertar el libro.");
                                     }
                                     break;
-
                                 case 2:
                                     System.out.println("Eliminando un libro, por código, de la base de datos...");
-                                    isbn = Teclado.leerCadena("ISBN: ");
+                                    do{
+                                        isbn = Teclado.leerCadena("ISBN: ");
+                                        validado = Validaciones.validarISBN(isbn);
+
+                                        if (!validado) {
+                                            System.err.println("La ISBN debe comenzar con 978 o 979.");
+                                            System.err.println("La ISBN debe tener 13 digitos");
+                                        }
+                                    }while(!validado);
+
                                     AccesoLibro.eliminarLibro(isbn);
                                     System.out.println("Libro eliminado correctamente.");
                                     break;
-
                                 case 3:
                                     System.out.println("Consultando todos los libros de la base de datos...");
+                                    libros = AccesoLibro.consultarTodosLibros();
 
-                                    List<Libro> todosLibros = AccesoLibro.consultarTodosLibros();
-                                    if (todosLibros.isEmpty()) {
-                                        System.out.println("No hay libros en la base de datos.");
+                                    if (libros.isEmpty()) {
+                                        System.err.println("No hay libros en la base de datos.");
                                     } else {
-                                        for (Libro l : todosLibros) {
+                                        for (Libro l : libros) {
                                             System.out.println(l);
                                         }
                                     }
                                     break;
-
                                 case 4:
                                     System.out.println("Consultando varios libros, por escritor, de la base de datos, ordenados por puntuación descendente...");
                                     String escritorBusqueda = Teclado.leerCadena("Escritor: ");
 
-                                    List<Libro> librosPorAutor = AccesoLibro.consultarLibrosPorAutorYPuntuacionDes(escritorBusqueda);
-                                    if (librosPorAutor.isEmpty()) {
-                                        System.out.println("No se han encontrado libros de ese escritor.");
+                                    libros = AccesoLibro.consultarLibrosPorAutorYPuntuacionDes(escritorBusqueda);
+
+                                    if (libros.isEmpty()) {
+                                        System.err.println("No se han encontrado libros de ese escritor.");
                                     } else {
-                                        for (Libro l : librosPorAutor) {
+                                        for (Libro l : libros) {
                                             System.out.println(l);
                                         }
                                     }
                                     break;
-
                                 case 5:
                                     System.out.println("Consultando los libros no prestados de la base de datos...");
-                                    List<Libro> librosNoPrestados = AccesoLibro.consultarLibrosNoPrestados();
-                                    if (librosNoPrestados.isEmpty()) {
-                                        System.out.println("No hay libros disponibles (todos están prestados).");
+                                    libros = AccesoLibro.consultarLibrosNoPrestados();
+
+                                    if (libros.isEmpty()) {
+                                        System.err.println("No hay libros disponibles (todos están prestados).");
                                     } else {
-                                        for (Libro l : librosNoPrestados) {
+                                        for (Libro l : libros) {
                                             System.out.println(l);
                                         }
                                     }
                                     break;
-
                                 case 6:
                                     System.out.println("Consultando los libros devueltos, en una fecha, de la base de datos...");
-                                    String fecha = Teclado.leerCadena("Fecha devolución (YYYY-MM-DD): ");
+                                    do{
+                                        fecha = Teclado.leerCadena("Fecha de devolucion: ");
+                                        validado = Validaciones.validarFecha(fecha);
 
-                                    List<Libro> librosDevueltos = AccesoLibro.consultarDevueltosPorFecha(fecha);
-                                    if (librosDevueltos.isEmpty()) {
-                                        System.out.println("No hay libros devueltos en esa fecha.");
+                                        if(!validado){
+                                            System.err.println("Fecha invalida.");
+                                        }
+                                    }while (!validado);
+
+                                    libros = AccesoLibro.consultarDevueltosPorFecha(fecha);
+                                    if (libros.isEmpty()) {
+                                        System.err.println("No hay libros devueltos en esa fecha.");
                                     } else {
-                                        for (Libro l : librosDevueltos) {
+                                        for (Libro l : libros) {
                                             System.out.println(l);
                                         }
                                     }
-
                                     break;
+                                default:
+                                    System.err.println("La opción de menú debe estar comprendida entre 0 y 6.");
                             }
-
                         } while (opLibro != 0);
                         break;
-
                     case 2:
                         int opSocio;
                         do {
                             opSocio = menuSocios();
 
-                            if (opSocio < 0 || opSocio > 6) {
-                                System.out.println("La opción de menú debe estar comprendida entre 0 y 6.");
-                                continue;
-                            }
-
                             switch (opSocio) {
                                 case 1:
                                     System.out.println("Insertando un socio en la base de datos...");
-
                                     do{
                                         dni = Teclado.leerCadena("DNI: ");
                                         validado = Validaciones.validarDNI(dni);
 
                                         if(!validado){
-                                            System.out.println("DNI invalido.");
+                                            System.err.println("DNI invalido.");
                                         }
                                     }while (!validado);
 
@@ -224,7 +255,7 @@ public class Main {
                                         validado = Validaciones.validarNombre(nombre);
 
                                         if(!validado){
-                                            System.out.println("Nombre invalido.");
+                                            System.err.println("Nombre invalido.");
                                         }
                                     }while(!validado);
 
@@ -235,7 +266,7 @@ public class Main {
                                         validado = Validaciones.validarTelefono(telefono);
 
                                         if(!validado){
-                                            System.out.println("Telefono invalido.");
+                                            System.err.println("Telefono invalido.");
                                         }
                                     }while(!validado);
 
@@ -244,7 +275,7 @@ public class Main {
                                         validado = Validaciones.validarCorreo(correo);
 
                                         if(!validado){
-                                            System.out.println("Correo invalido.");
+                                            System.err.println("Correo invalido.");
                                         }
                                     }while (!validado);
 
@@ -254,7 +285,7 @@ public class Main {
                                     if (insertado) {
                                         System.out.println("Se ha insertado un socio en la base de datos.");
                                     } else {
-                                        System.out.println("No se ha insertado el socio en la base de datos.");
+                                        System.err.println("No se ha insertado el socio en la base de datos.");
                                     }
                                     break;
                                 case 2:
@@ -264,7 +295,7 @@ public class Main {
                                         validado = Validaciones.validarDNI(dni);
 
                                         if(!validado){
-                                            System.out.println("DNI invalido.");
+                                            System.err.println("DNI invalido.");
                                         }
                                     }while (!validado);
 
@@ -298,75 +329,111 @@ public class Main {
                                 case 6:
                                     System.out.println("Consultando los socios con préstamos en una fecha de la base de datos...");
                                     do{
-                                        fechaPrestamo = Teclado.leerCadena("Fecha: ");
-                                        validado = Validaciones.validarFecha(fechaPrestamo);
+                                        fecha = Teclado.leerCadena("Fecha: ");
+                                        validado = Validaciones.validarFecha(fecha);
 
                                         if(!validado){
                                             System.out.println("Fecha invalida.");
                                         }
                                     }while (!validado);
 
-                                    socios = AccesoSocio.consultarSociosPorPrestamoEnFecha(fechaPrestamo);
+                                    socios = AccesoSocio.consultarSociosPorPrestamoEnFecha(fecha);
 
                                     System.out.println(AccesoSocio.toStringList(socios));
                                     System.out.println("Se han encontrado " + socios.size() + " socios en la base de datos.");
                                     break;
                                 default:
-                                    System.out.println("La opción de menú debe estar comprendida entre 0 y 6.");
+                                    System.err.println("La opción de menú debe estar comprendida entre 0 y 6.");
                             }
-
                         } while (opSocio != 0);
                         break;
-
                     case 3:
                         int opPrestamo;
                         do {
                             opPrestamo = menuPrestamos();
 
-                            if (opPrestamo < 0 || opPrestamo > 6) {
-                                System.out.println("La opción de menú debe estar comprendida entre 0 y 6.");
-                                continue;
-                            }
-
                             switch (opPrestamo) {
-
                                 case 1:
                                     System.out.print("Insertando un préstamo en la base de datos...");
-                                    String isbn = Teclado.leerCadena("ISBN: ");
-                                    dni = Teclado.leerCadena("DNI: ");
+                                    do{
+                                        isbn = Teclado.leerCadena("ISBN: ");
+                                        validado = Validaciones.validarISBN(isbn);
+
+                                        if (!validado) {
+                                            System.err.println("La ISBN debe comenzar con 978 o 979.");
+                                            System.err.println("La ISBN debe tener 13 digitos");
+                                        }
+                                    }while(!validado);
+
+                                    do{
+                                        dni = Teclado.leerCadena("DNI: ");
+                                        validado = Validaciones.validarDNI(dni);
+
+                                        if(!validado){
+                                            System.err.println("DNI invalido.");
+                                        }
+                                    }while (!validado);
 
                                     AccesoPrestamo.insertarPrestamo(isbn, dni);
                                     System.out.println("Préstamo insertado correctamente.");
                                     break;
-
                                 case 2:
                                     System.out.println("Actualizando un préstamo, por datos identificativos, de la base de datos...");
+                                    do{
+                                        isbn = Teclado.leerCadena("ISBN: ");
+                                        validado = Validaciones.validarISBN(isbn);
 
-                                    isbn = Teclado.leerCadena("Codigo ISBN libro para dar de baja");
-                                    dni = Teclado.leerCadena("DNI socio para dar de baja");
+                                        if (!validado) {
+                                            System.err.println("La ISBN debe comenzar con 978 o 979.");
+                                            System.err.println("La ISBN debe tener 13 digitos");
+                                        }
+                                    }while(!validado);
+
+                                    do{
+                                        dni = Teclado.leerCadena("DNI: ");
+                                        validado = Validaciones.validarDNI(dni);
+
+                                        if(!validado){
+                                            System.err.println("DNI invalido.");
+                                        }
+                                    }while (!validado);
+
                                     String fecha_inicio = Teclado.leerCadena("Fecha inicio de prestamo: ");
                                     String fecha_baja = Teclado.leerCadena("Fecha baja de prestamo: ");
 
                                     AccesoPrestamo.actualizarPrestamo(isbn, dni, fecha_inicio, fecha_baja);
                                     System.out.println("Libro dado de baja con exito");
-
                                     break;
-
                                 case 3:
                                     System.out.println("Eliminando un préstamo, por datos identificativos, de la base de datos...");
+                                    do{
+                                        isbn = Teclado.leerCadena("ISBN: ");
+                                        validado = Validaciones.validarISBN(isbn);
 
-                                    isbn = Teclado.leerCadena("Codigo ISBN libro para dar de baja");
-                                    dni = Teclado.leerCadena("DNI socio para dar de baja");
+                                        if (!validado) {
+                                            System.err.println("La ISBN debe comenzar con 978 o 979.");
+                                            System.err.println("La ISBN debe tener 13 digitos");
+                                        }
+                                    }while(!validado);
+
+                                    do{
+                                        dni = Teclado.leerCadena("DNI: ");
+                                        validado = Validaciones.validarDNI(dni);
+
+                                        if(!validado){
+                                            System.err.println("DNI invalido.");
+                                        }
+                                    }while (!validado);
+
                                     String fecha_ini = Teclado.leerCadena("Fecha inicio del préstamo: ");
-
                                     boolean eliminado = AccesoPrestamo.eliminarLibro(isbn, dni, fecha_ini);
+
                                     if (eliminado) {
                                         System.out.println("Préstamo eliminado correctamente.");
                                     } else {
-                                        System.out.println("No se ha encontrado el préstamo.");
+                                        System.err.println("No se ha encontrado el préstamo.");
                                     }
                                     break;
-
                                 case 4:
                                     System.out.println("Consultando todos los préstamos de la base de datos...");
                                     prestamos = AccesoPrestamo.consultarPrestamos();
@@ -374,7 +441,6 @@ public class Main {
                                     System.out.println(AccesoPrestamo.toStringList(prestamos));
                                     System.out.println("Se han consultado " + prestamos.size() + " prestamos en la base de datos.");
                                     break;
-
                                 case 5:
                                     System.out.println("Consultando los préstamos no devueltos de la base de datos....");
                                     prestamos = AccesoPrestamo.consultarPrestamosNoDevueltos();
@@ -385,32 +451,29 @@ public class Main {
                                 case 6:
                                     System.out.println("Consultando DNI y nombre de socio, ISBN y título de libro y fecha de devolución de los préstamos realizados en una fecha de la base de datos...");
                                     do{
-                                        fechaPrestamo = Teclado.leerCadena("Fecha prestamo: ");
-                                        validado = Validaciones.validarFecha(fechaPrestamo);
+                                        fecha = Teclado.leerCadena("Fecha prestamo: ");
+                                        validado = Validaciones.validarFecha(fecha);
 
                                         if(!validado){
-                                            System.out.println("Fecha inicio de prestamo no valido");
+                                            System.err.println("Fecha inicio de prestamo no valido");
                                         }
                                     }while (!validado);
-                                    contenido = AccesoPrestamo.consultarPrestamosPorFechaInicio(fechaPrestamo);
+                                    contenido = AccesoPrestamo.consultarPrestamosPorFechaInicio(fecha);
 
                                     System.out.println(AccesoPrestamo.toStringList(contenido));
                                     System.out.println("Se han consultado " + contenido.size() + " prestamos en la base de datos.");
                                     break;
                                 default:
-                                    System.out.println("La opción de menú debe estar comprendida entre 0 y 6.");
+                                    System.err.println("La opción de menú debe estar comprendida entre 0 y 6.");
                             }
-
                         } while (opPrestamo != 0);
                         break;
-
                     default:
                         System.out.println("La opción de menú debe estar comprendida entre 0 y 3.");
                 }
             } catch (BDException | SociosException | PrestamosException | LibroException e) {
                 System.err.println(e.getMessage());
             }
-
         } while (opcion != 0);
     }
 }
