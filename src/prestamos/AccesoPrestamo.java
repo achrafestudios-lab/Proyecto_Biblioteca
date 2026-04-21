@@ -270,9 +270,12 @@ public class AccesoPrestamo {
      * @param fecha_devolucion
      * @throws BDException
      */
-    public static void actualizarPrestamo(String isbn, String dni, String fecha_inicio, String fecha_devolucion) throws BDException {
+    public static void actualizarPrestamo(String isbn, String dni, String fecha_inicio) throws BDException {
         Connection conexion = null;
         int columnasInsertadas = 0;
+        LocalDate fechaInicio = LocalDate.now();
+        String fecha_devolucion = fechaInicio.getYear() + "-" + fechaInicio.getMonthValue() + "-" + fechaInicio.getDayOfMonth();
+
 
         try {
             conexion = ConfigMySql.abrirConexion();

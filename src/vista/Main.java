@@ -406,9 +406,8 @@ public class Main {
                                     }while (!validado);
 
                                     String fecha_inicio = Teclado.leerCadena("Fecha inicio de prestamo: ");
-                                    String fecha_baja = Teclado.leerCadena("Fecha baja de prestamo: ");
 
-                                    AccesoPrestamo.actualizarPrestamo(isbn, dni, fecha_inicio, fecha_baja);
+                                    AccesoPrestamo.actualizarPrestamo(isbn, dni, fecha_inicio);
                                     System.out.println("Libro dado de baja con exito");
                                     break;
                                 case 3:
