@@ -469,7 +469,7 @@ public class Main {
                         } while (opPrestamo != 0);
                         break;
                     default:
-                        System.out.println("La opción de menú debe estar comprendida entre 0 y 3.");
+                        System.err.println("La opción de menú debe estar comprendida entre 0 y 3.");
                 }
             } catch (BDException | SociosException | PrestamosException | LibroException e) {
                 System.err.println(e.getMessage());
