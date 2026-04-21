@@ -329,7 +329,7 @@ public class Main {
                                         validado = Validaciones.validarFecha(fecha);
 
                                         if(!validado){
-                                            System.out.println("Fecha invalida.");
+                                            System.err.println("Fecha invalida.");
                                         }
                                     }while (!validado);
 
