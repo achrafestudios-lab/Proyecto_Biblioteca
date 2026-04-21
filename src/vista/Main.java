@@ -5,6 +5,7 @@ import exception.BDException;
 import exception.PrestamosException;
 import exception.SociosException;
 import prestamos.AccesoPrestamo;
+import prestamos.ConsultarPrestamosPorFechaInicio;
 import prestamos.Prestamo;
 import socios.AccesoSocio;
 import socios.Socio;
@@ -91,7 +92,7 @@ public class Main {
         List<Libro> libros;
         Socio socio;
         Libro libro;
-        List<List<String>> contenido;
+        List<ConsultarPrestamosPorFechaInicio> contenido;
 
         int opcion;
 
