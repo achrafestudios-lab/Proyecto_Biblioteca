@@ -11,14 +11,9 @@ import socios.Socio;
 
 import java.util.List;
 
-import exception.BDException;
 import exception.LibroException;
-import exception.PrestamosException;
 import libros.AccesoLibro;
 import libros.Libro;
-import prestamos.AccesoPrestamo;
-
-import java.util.List;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -86,7 +81,6 @@ public class Main {
         String correo;
         String ciudad;
         String fechaPrestamo;
-        String fechaInicio;
         boolean validado;
 
         List<Socio> socios;
@@ -391,14 +385,14 @@ public class Main {
                                 case 6:
                                     System.out.println("Consultando DNI y nombre de socio, ISBN y título de libro y fecha de devolución de los préstamos realizados en una fecha de la base de datos...");
                                     do{
-                                        fechaInicio = Teclado.leerCadena("Fecha inicio: ");
-                                        validado = Validaciones.validarFecha(fechaInicio);
+                                        fechaPrestamo = Teclado.leerCadena("Fecha prestamo: ");
+                                        validado = Validaciones.validarFecha(fechaPrestamo);
 
                                         if(!validado){
                                             System.out.println("Fecha inicio de prestamo no valido");
                                         }
                                     }while (!validado);
-                                    contenido = AccesoPrestamo.consultarPrestamosPorFechaInicio(fechaInicio);
+                                    contenido = AccesoPrestamo.consultarPrestamosPorFechaInicio(fechaPrestamo);
 
                                     System.out.println(AccesoPrestamo.toStringList(contenido));
                                     System.out.println("Se han consultado " + contenido.size() + " prestamos en la base de datos.");

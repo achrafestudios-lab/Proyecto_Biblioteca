@@ -3,8 +3,6 @@ package prestamos;
 import config.ConfigMySql;
 import exception.BDException;
 import exception.PrestamosException;
-import libros.Libro;
-import socios.Socio;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,16 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
-import config.ConfigMySql;
-import exception.BDException;
-import exception.PrestamosException;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class AccesoPrestamo {
