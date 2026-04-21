@@ -1,14 +1,11 @@
 package prestamos;
-
 import config.ConfigMySql;
 import exception.BDException;
 import exception.PrestamosException;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -151,7 +148,6 @@ public class AccesoPrestamo {
         return prestamos;
     }
 
-
     public static String toStringList(List<?> lista) {
         String cadena = "";
 
@@ -164,14 +160,13 @@ public class AccesoPrestamo {
 
     /**
      *
-     * @param isbn
-     * @param dni
-     * @throws BDException
-     * @throws PrestamosException
+     * @param isbn Pide ISBN
+     * @param dni Pide DNI
+     * @throws BDException Gestion de exceptions
+     * @throws PrestamosException Por si todos los prestamos estan devueltos
      */
     public static void insertarPrestamo(String isbn, String dni) throws BDException, PrestamosException {
         Connection conexion = null;
-        int columnasInsertadas = 0;
         LocalDate fechaInicio = LocalDate.now();
         LocalDate fechaFin = fechaInicio.plusDays(30);
         String fecha = fechaInicio.getYear() + "-" + fechaInicio.getMonthValue() + "-" + fechaInicio.getDayOfMonth();
@@ -210,8 +205,6 @@ public class AccesoPrestamo {
             sentencia.setString(3, fecha);
             sentencia.setString(4, fechaF);
 
-            columnasInsertadas = sentencia.executeUpdate();
-
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             throw new BDException(BDException.ERROR_QUERY + e.getMessage());
@@ -224,11 +217,11 @@ public class AccesoPrestamo {
 
     /**
      *
-     * @param isbn
-     * @param dni
-     * @param fecha_inicio
-     * @return
-     * @throws BDException
+     * @param isbn Pide ISBN
+     * @param dni Pide DNI
+     * @param fecha_inicio Pide fecha inico de el prestamo
+     * @return Da true si ha sido eliminado correctamente, false si no existe
+     * @throws BDException Gestion de exceptions
      */
     public static boolean eliminarLibro(String isbn, String dni, String fecha_inicio) throws BDException {
         PreparedStatement ps;
@@ -264,15 +257,13 @@ public class AccesoPrestamo {
 
     /**
      *
-     * @param isbn
-     * @param dni
-     * @param fecha_inicio
-     * @param fecha_devolucion
-     * @throws BDException
+     * @param isbn Pide ISBN
+     * @param dni Pide DNI
+     * @param fecha_inicio Pide fecha inicio para dar de baja un prestamo
+     * @throws BDException Gestion de exceptions
      */
     public static void actualizarPrestamo(String isbn, String dni, String fecha_inicio) throws BDException {
         Connection conexion = null;
-        int columnasInsertadas = 0;
         LocalDate fechaInicio = LocalDate.now();
         String fecha_devolucion = fechaInicio.getYear() + "-" + fechaInicio.getMonthValue() + "-" + fechaInicio.getDayOfMonth();
 
@@ -291,8 +282,6 @@ public class AccesoPrestamo {
             sentencia.setString(2, isbn);
             sentencia.setString(3, dni);
             sentencia.setString(4, fecha_inicio);
-
-            columnasInsertadas = sentencia.executeUpdate();
 
         } catch (SQLException e) {
             // TODO Auto-generated catch block
