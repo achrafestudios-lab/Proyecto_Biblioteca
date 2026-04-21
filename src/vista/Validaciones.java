@@ -2,7 +2,7 @@ package vista;
 
 public class Validaciones {
     public static boolean validarISBN(String isbn){
-        return isbn.matches("^97[89][0-9]{6}$");
+        return isbn.matches("^97[89][0-9]{10}$");
     }
 
     public static boolean validarDNI(String dni){
@@ -23,5 +23,13 @@ public class Validaciones {
 
     public static boolean validarFecha(String fecha){
         return fecha.matches("^\\d{2}-\\d{2}-\\d{2}$");
+    }
+
+    public static boolean validarAnio(int anio){
+        return anio >= 0 && anio <= 9999;
+    }
+
+    public static boolean validarPuntuacion(double puntuacion){
+        return puntuacion >= 0 && puntuacion <= 10;
     }
 }
