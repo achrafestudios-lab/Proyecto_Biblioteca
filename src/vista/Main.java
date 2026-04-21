@@ -10,6 +10,7 @@ import socios.AccesoSocio;
 import socios.Socio;
 
 import java.util.List;
+
 import exception.BDException;
 import exception.LibroException;
 import exception.PrestamosException;
@@ -79,12 +80,22 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        int opcion;
+        String dni;
+        String nombre;
+        String telefono;
+        String correo;
+        String ciudad;
+        String fechaPrestamo;
+        String fechaInicio;
+        boolean validado;
+
         List<Socio> socios;
         List<Prestamo> prestamos;
         Socio socio;
         Prestamo prestamo;
         List<List<String>> contenido;
+
+        int opcion;
 
         do {
             opcion = menuPrincipal();
@@ -92,21 +103,21 @@ public class Main {
             try {
                 switch (opcion) {
 
-                case 0:
-                    System.out.println("Saliendo del programa...");
-                    break;
+                    case 0:
+                        System.out.println("Saliendo del programa...");
+                        break;
 
-                case 1:
-                    int opLibro;
-                    do {
-                        opLibro = menuLibros();
+                    case 1:
+                        int opLibro;
+                        do {
+                            opLibro = menuLibros();
 
-                        if (opLibro < 0 || opLibro > 6) {
-                            System.out.println("La opción de menú debe estar comprendida entre 0 y 6.");
-                            continue;
-                        }
+                            if (opLibro < 0 || opLibro > 6) {
+                                System.out.println("La opción de menú debe estar comprendida entre 0 y 6.");
+                                continue;
+                            }
 
-                        switch (opLibro) {
+                            switch (opLibro) {
 
                                 case 1:
                                     System.out.println("Insertando un libro en la base de datos...");
@@ -185,31 +196,63 @@ public class Main {
                                         }
                                     }
 
-                                break;
-                        }
+                                    break;
+                            }
 
-                    } while (opLibro != 0);
-                    break;
+                        } while (opLibro != 0);
+                        break;
 
-                case 2:
-                    int opSocio;
-                    do {
-                        opSocio = menuSocios();
+                    case 2:
+                        int opSocio;
+                        do {
+                            opSocio = menuSocios();
 
-                        if (opSocio < 0 || opSocio > 6) {
-                            System.out.println("La opción de menú debe estar comprendida entre 0 y 6.");
-                            continue;
-                        }
+                            if (opSocio < 0 || opSocio > 6) {
+                                System.out.println("La opción de menú debe estar comprendida entre 0 y 6.");
+                                continue;
+                            }
 
                             switch (opSocio) {
                                 case 1:
                                     System.out.println("Insertando un socio en la base de datos...");
 
-                                String dni = Teclado.leerCadena("DNI: ");
-                                String nombre = Teclado.leerCadena("Nombre: ");
-                                String domicilio = Teclado.leerCadena("Domicilio: ");
-                                String telefono = Teclado.leerCadena("Teléfono: ");
-                                String correo = Teclado.leerCadena("Correo: ");
+                                    do{
+                                        dni = Teclado.leerCadena("DNI: ");
+                                        validado = Validaciones.validarDNI(dni);
+
+                                        if(!validado){
+                                            System.out.println("DNI invalido.");
+                                        }
+                                    }while (!validado);
+
+                                    do{
+                                        nombre = Teclado.leerCadena("Nombre: ");
+                                        validado = Validaciones.validarNombre(nombre);
+
+                                        if(!validado){
+                                            System.out.println("Nombre invalido.");
+                                        }
+                                    }while(!validado);
+
+                                    String domicilio = Teclado.leerCadena("Ciudad: ");
+
+                                    do{
+                                        telefono = Teclado.leerCadena("Teléfono: ");
+                                        validado = Validaciones.validarTelefono(telefono);
+
+                                        if(!validado){
+                                            System.out.println("Telefono invalido.");
+                                        }
+                                    }while(!validado);
+
+                                    do{
+                                        correo = Teclado.leerCadena("Correo: ");
+                                        validado = Validaciones.validarCorreo(correo);
+
+                                        if(!validado){
+                                            System.out.println("Correo invalido.");
+                                        }
+                                    }while (!validado);
 
                                     socio = new Socio(0, dni, nombre, domicilio, telefono, correo);
                                     boolean insertado = AccesoSocio.insertarSocio(socio);
@@ -222,7 +265,14 @@ public class Main {
                                     break;
                                 case 2:
                                     System.out.println("Eliminando un socio, por código, de la base de datos....");
-                                    dni = Teclado.leerCadena("DNI socio: ");
+                                    do{
+                                        dni = Teclado.leerCadena("DNI: ");
+                                        validado = Validaciones.validarDNI(dni);
+
+                                        if(!validado){
+                                            System.out.println("DNI invalido.");
+                                        }
+                                    }while (!validado);
 
                                     AccesoSocio.eliminarSocio(dni);
                                     System.out.println("Se ha eliminado un socio de la base de datos.");
@@ -237,9 +287,9 @@ public class Main {
 
                                 case 4:
                                     System.out.println("Consultando varios socios, por localidad, de la base de datos, ordenados por nombre ascendente");
-                                    String localidad = Teclado.leerCadena("Localidad: ");
+                                    ciudad = Teclado.leerCadena("Ciudad: ");
 
-                                    socios = AccesoSocio.consultarSociosPorLocalidadOrdenadoPorNombreAsc(localidad);
+                                    socios = AccesoSocio.consultarSociosPorLocalidadOrdenadoPorNombreAsc(ciudad);
                                     System.out.println(AccesoSocio.toStringList(socios));
                                     System.out.println("Se han encontrado " + socios.size() + " socios en la  base de datos.");
                                     break;
@@ -253,7 +303,15 @@ public class Main {
                                     break;
                                 case 6:
                                     System.out.println("Consultando los socios con préstamos en una fecha de la base de datos...");
-                                    String fechaPrestamo = Teclado.leerCadena("Fecha: ");
+                                    do{
+                                        fechaPrestamo = Teclado.leerCadena("Fecha: ");
+                                        validado = Validaciones.validarFecha(fechaPrestamo);
+
+                                        if(!validado){
+                                            System.out.println("Fecha invalida.");
+                                        }
+                                    }while (!validado);
+
                                     socios = AccesoSocio.consultarSociosPorPrestamoEnFecha(fechaPrestamo);
 
                                     System.out.println(AccesoSocio.toStringList(socios));
@@ -263,25 +321,25 @@ public class Main {
                                     System.out.println("La opción de menú debe estar comprendida entre 0 y 6.");
                             }
 
-                    } while (opSocio != 0);
-                    break;
+                        } while (opSocio != 0);
+                        break;
 
-                case 3:
-                    int opPrestamo;
-                    do {
-                        opPrestamo = menuPrestamos();
+                    case 3:
+                        int opPrestamo;
+                        do {
+                            opPrestamo = menuPrestamos();
 
-                        if (opPrestamo < 0 || opPrestamo > 6) {
-                            System.out.println("La opción de menú debe estar comprendida entre 0 y 6.");
-                            continue;
-                        }
+                            if (opPrestamo < 0 || opPrestamo > 6) {
+                                System.out.println("La opción de menú debe estar comprendida entre 0 y 6.");
+                                continue;
+                            }
 
-                        switch (opPrestamo) {
+                            switch (opPrestamo) {
 
                                 case 1:
                                     System.out.print("Insertando un préstamo en la base de datos...");
                                     String isbn = Teclado.leerCadena("ISBN: ");
-                                    String dni = Teclado.leerCadena("DNI: ");
+                                    dni = Teclado.leerCadena("DNI: ");
 
                                     AccesoPrestamo.insertarPrestamo(isbn, dni);
                                     System.out.println("Préstamo insertado correctamente.");
@@ -298,10 +356,10 @@ public class Main {
                                     AccesoPrestamo.actualizarPrestamo(isbn, dni, fecha_inicio, fecha_baja);
                                     System.out.println("Libro dado de baja con exito");
 
-                                break;
+                                    break;
 
-                            case 3:
-                                System.out.println("Eliminando un préstamo, por datos identificativos, de la base de datos...");
+                                case 3:
+                                    System.out.println("Eliminando un préstamo, por datos identificativos, de la base de datos...");
 
                                     isbn = Teclado.leerCadena("Codigo ISBN libro para dar de baja");
                                     dni = Teclado.leerCadena("DNI socio para dar de baja");
@@ -332,7 +390,14 @@ public class Main {
                                     break;
                                 case 6:
                                     System.out.println("Consultando DNI y nombre de socio, ISBN y título de libro y fecha de devolución de los préstamos realizados en una fecha de la base de datos...");
-                                    String fechaInicio = Teclado.leerCadena("Fecha inicio: ");
+                                    do{
+                                        fechaInicio = Teclado.leerCadena("Fecha inicio: ");
+                                        validado = Validaciones.validarFecha(fechaInicio);
+
+                                        if(!validado){
+                                            System.out.println("Fecha inicio de prestamo no valido");
+                                        }
+                                    }while (!validado);
                                     contenido = AccesoPrestamo.consultarPrestamosPorFechaInicio(fechaInicio);
 
                                     System.out.println(AccesoPrestamo.toStringList(contenido));
@@ -342,8 +407,8 @@ public class Main {
                                     System.out.println("La opción de menú debe estar comprendida entre 0 y 6.");
                             }
 
-                    } while (opPrestamo != 0);
-                    break;
+                        } while (opPrestamo != 0);
+                        break;
 
                     default:
                         System.out.println("La opción de menú debe estar comprendida entre 0 y 3.");
