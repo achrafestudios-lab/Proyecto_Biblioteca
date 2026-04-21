@@ -248,4 +248,14 @@ public class AccesoLibro {
 
         }
     }
+
+    public static String toStringList(List<?> lista) {
+        String cadena = "";
+
+        for (Object o: lista) {
+            cadena += o + "\n";
+        }
+
+        return cadena;
+    }
 }

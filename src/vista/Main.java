@@ -178,9 +178,7 @@ public class Main {
                                     if (libros.isEmpty()) {
                                         System.err.println("No hay libros en la base de datos.");
                                     } else {
-                                        for (Libro l : libros) {
-                                            System.out.println(l);
-                                        }
+                                        System.out.println(AccesoLibro.toStringList(libros));
                                     }
                                     break;
                                 case 4:
@@ -192,9 +190,7 @@ public class Main {
                                     if (libros.isEmpty()) {
                                         System.err.println("No se han encontrado libros de ese escritor.");
                                     } else {
-                                        for (Libro l : libros) {
-                                            System.out.println(l);
-                                        }
+                                        System.out.println(AccesoLibro.toStringList(libros));
                                     }
                                     break;
                                 case 5:
@@ -204,9 +200,7 @@ public class Main {
                                     if (libros.isEmpty()) {
                                         System.err.println("No hay libros disponibles (todos están prestados).");
                                     } else {
-                                        for (Libro l : libros) {
-                                            System.out.println(l);
-                                        }
+                                        System.out.println(AccesoLibro.toStringList(libros));
                                     }
                                     break;
                                 case 6:
@@ -224,9 +218,7 @@ public class Main {
                                     if (libros.isEmpty()) {
                                         System.err.println("No hay libros devueltos en esa fecha.");
                                     } else {
-                                        for (Libro l : libros) {
-                                            System.out.println(l);
-                                        }
+                                        System.out.println(AccesoLibro.toStringList(libros));
                                     }
                                     break;
                                 default:
