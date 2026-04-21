@@ -1,5 +1,4 @@
 package vista;
-
 import entrada.Teclado;
 import exception.BDException;
 import exception.PrestamosException;
@@ -9,9 +8,7 @@ import prestamos.ConsultarPrestamosPorFechaInicio;
 import prestamos.Prestamo;
 import socios.AccesoSocio;
 import socios.Socio;
-
 import java.util.List;
-
 import exception.LibroException;
 import libros.AccesoLibro;
 import libros.Libro;

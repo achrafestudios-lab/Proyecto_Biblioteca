@@ -22,7 +22,7 @@ public class Validaciones {
     }
 
     public static boolean validarFecha(String fecha){
-        return fecha.matches("^\\d{2}-\\d{2}-\\d{2}$");
+        return fecha.matches("^\\d{4}-\\d{2}-\\d{2}$");
     }
 
     public static boolean validarAnio(int anio){

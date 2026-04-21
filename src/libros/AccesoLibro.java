@@ -212,7 +212,9 @@ public class AccesoLibro {
         try {
             conexion = ConfigMySql.abrirConexion();
 
-            String query ="SELECT libro.* FROM libro JOIN prestamo ON (libro.codigo = prestamo.codigo_libro) WHERE prestamo.fecha_devolucion = ?";
+            String query = "SELECT DISTINCT libro.* FROM libro " +
+                    "JOIN prestamo ON libro.codigo = prestamo.codigo_libro " +
+                    "WHERE prestamo.fecha_devolucion = ?";
             ps = conexion.prepareStatement(query);
             ps.setString(1, fecha_devolucion);
             ResultSet resultados = ps.executeQuery();
@@ -245,19 +247,5 @@ public class AccesoLibro {
             librosAux.add(LibroAux);
 
         }
-    }
-
-    public static void main(String[] args) {
-        System.out.println(consultarTodosLibros());
-
-        Libro libro = new Libro(5, "123456789", "Prueva libro", "Achraf Diaz", 2000, 9.8);
-
-        if (insertarLibros(libro)) {
-            System.out.println("Libro insertado correctamente");
-        }
-
-        System.out.println(consultarLibrosPorAutorYPuntuacionDes("Achraf Diaz"));
-
-        System.out.println(consultarLibrosNoPrestados());
     }
 }

@@ -151,6 +151,7 @@ public class AccesoPrestamo {
         return prestamos;
     }
 
+
     public static String toStringList(List<?> lista) {
         String cadena = "";
 
