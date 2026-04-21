@@ -15,6 +15,11 @@ import java.util.List;
 import java.time.LocalDate;
 
 public class AccesoPrestamo {
+    /**
+     *
+     * @return Lista todos los prestamos existentes
+     * @throws PrestamosException Por si no hay prestamos en la base de datos
+     */
     public static List<Prestamo> consultarPrestamos() throws PrestamosException {
         List<Prestamo> prestamos = new LinkedList<>();
         Connection conexion = null;
@@ -54,6 +59,11 @@ public class AccesoPrestamo {
         return prestamos;
     }
 
+    /**
+     *
+     * @return Lista con todos los prestamos no devueltos
+     * @throws PrestamosException Por si todos los prestamos estan devueltos
+     */
     public static List<Prestamo> consultarPrestamosNoDevueltos() throws PrestamosException {
         List<Prestamo> prestamos = new LinkedList<>();
         Connection conexion = null;
@@ -93,6 +103,12 @@ public class AccesoPrestamo {
         return prestamos;
     }
 
+    /**
+     *
+     * @param fechaInicio fecha
+     * @return Lista con el dni, nombre, isbn, titulo y fecha de devolucion de un prestamo por fecha
+     * @throws PrestamosException Si no hay prestamos en esa fecha
+     */
     public static List<ConsultarPrestamosPorFechaInicio> consultarPrestamosPorFechaInicio(String fechaInicio) throws PrestamosException {
         List<ConsultarPrestamosPorFechaInicio> prestamos = new LinkedList<>();
         Connection conexion = null;
