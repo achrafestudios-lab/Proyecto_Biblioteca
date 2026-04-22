@@ -86,6 +86,7 @@ public class AccesoLibro {
             ps.setString(1, isbn);
 
             int resultado = ps.executeUpdate();
+
             if (resultado == 0) {
                 throw new LibroException(LibroException.ERROR_NO_EXISTE_EL_LIBRO);
             }
@@ -132,6 +133,13 @@ public class AccesoLibro {
         return LibrosAux;
     }
 
+    /**
+     *
+     * @param titulo Pide titulo
+     * @return Lista de titulos no prestados
+     * @throws BDException Gestion de exceptions
+     * @throws LibroException Gestion de exceptions
+     */
     public static List<Libro> consultarPorTituloSinPrestar(String titulo) throws BDException, LibroException {
         List<Libro> librosAux = new ArrayList<>();
         PreparedStatement ps;
@@ -143,6 +151,40 @@ public class AccesoLibro {
 
             String query = "SELECT * FROM libro WHERE LOWER(titulo) LIKE ?" +
                     " AND codigo NOT IN (SELECT codigo_libro FROM prestamo WHERE fecha_devolucion IS NULL)";
+            ps = conexion.prepareStatement(query);
+            ps.setString(1, "%" + titulo + "%");
+
+            ResultSet resultados = ps.executeQuery();
+
+            crearLibro(librosAux, resultados);
+
+            if(librosAux.isEmpty()){
+                throw new LibroException(LibroException.ERROR_NO_EXISTE_EL_LIBRO_NOMBRE);
+            }
+        } catch (SQLException e) {
+            throw new BDException(BDException.ERROR_QUERY + e.getMessage());
+        } catch (BDException e) {
+            throw new BDException(BDException.ERROR_ABRIR_CONEXION + e.getMessage());
+        } finally {
+            if (conexion != null) {
+                ConfigMySql.cerrarConexion(conexion);
+            }
+        }
+
+        return librosAux;
+    }
+
+    public static List<Libro> consultarPorTituloPrestadosYNoDevueltos(String titulo) throws BDException, LibroException {
+        List<Libro> librosAux = new ArrayList<>();
+        PreparedStatement ps;
+        Connection conexion = null;
+        titulo = titulo.toLowerCase();
+
+        try {
+            conexion = ConfigMySql.abrirConexion();
+
+            String query = "SELECT * FROM libro WHERE LOWER(titulo) LIKE ?" +
+                    " AND codigo IN (SELECT codigo_libro FROM prestamo WHERE fecha_devolucion IS NULL)";
             ps = conexion.prepareStatement(query);
             ps.setString(1, "%" + titulo + "%");
 

@@ -4,14 +4,13 @@ import config.ConfigMySql;
 import exception.BDException;
 import exception.PrestamosException;
 import exception.SociosException;
-import prestamos.Prestamo;
+import libros.Libro;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class AccesoSocio {
     public static boolean insertarSocio(Socio socio) {
@@ -169,8 +168,8 @@ public class AccesoSocio {
         return socios;
     }
 
-    public static List<Prestamo> consultarLibrosPorDNI(String dni) throws PrestamosException {
-        List<Prestamo> prestamos = new LinkedList<>();
+    public static Map<String, Object> consultarLibrosPorDNI(String dni) throws PrestamosException {
+        Map<String , Object> libros = new TreeMap<>();
         Connection conexion = null;
         PreparedStatement ps;
         dni = dni.toLowerCase();
@@ -178,23 +177,30 @@ public class AccesoSocio {
         try {
             conexion = ConfigMySql.abrirConexion();
 
-            String query = "SELECT * FROM libro WHERE fecha_devolucion IS NULL" +
-                    " JOIN prestamo ";
+            String query = "SELECT l.*, p.fecha_inicio FROM libro l" +
+                    " JOIN prestamo p ON (l.codigo = p.codigo_libro)" +
+                    " JOIN socio s ON (p.codigo_socio = s.codigo)" +
+                    " WHERE p.fecha_devolucion IS NULL" +
+                    " AND s.dni = ?";
             ps = conexion.prepareStatement(query);
+            ps.setString(1, dni);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                int codigoLibro = rs.getInt("codigo_Libro");
-                int codigoSocio = rs.getInt("codigo_socio");
+                int codigo = rs.getInt("codigo");
+                String isbn = rs.getString("isbn");
+                String titulo = rs.getString("titulo");
+                String escritor = rs.getString("escritor");
+                int anio_publicaccion = rs.getInt("anio_publicacion");
+                double puntuacion = rs.getDouble("puntuacion");
                 String fechaInicio = rs.getString("fecha_inicio");
-                String fechaFin = rs.getString("fecha_fin");
-                String fechaDevolucion = rs.getString("fecha_devolucion");
 
-                Prestamo prestamoAux = new Prestamo(codigoLibro, codigoSocio, fechaInicio, fechaFin, fechaDevolucion);
-                prestamos.add(prestamoAux);
+                Libro LibroAux = new Libro(codigo, isbn, titulo, fechaInicio, anio_publicaccion, puntuacion);
+
+                libros.put(fechaInicio,LibroAux);
             }
 
-            if(prestamos.isEmpty()){
+            if(libros.isEmpty()){
                 throw new PrestamosException(PrestamosException.PRESTAMOS_NO_DEVUELTOS_INEXISTENTES);
             }
         }catch (SQLException e) {
@@ -207,7 +213,7 @@ public class AccesoSocio {
             }
         }
 
-        return prestamos;
+        return libros;
     }
 
     /**
@@ -305,5 +311,14 @@ public class AccesoSocio {
             cadena += socioAux + "\n";
         }
         return cadena;
+    }
+
+    public static String toStringMap(Map<?, Object> mapa) {
+        StringBuilder cadena = new StringBuilder();
+
+        for(Map.Entry<?, Object> entry : mapa.entrySet()) {
+            cadena.append("Fecha inicio [").append(entry.getKey()).append("]").append(": ").append(entry.getValue()).append("\n");
+        }
+        return cadena.toString();
     }
 }

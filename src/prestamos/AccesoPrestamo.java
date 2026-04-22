@@ -191,8 +191,6 @@ public class AccesoPrestamo {
                 }
             }
 
-            System.out.println(fecha);
-
             String sentenciaInsertarDept = "INSERT INTO prestamo (codigo_libro, codigo_socio, fecha_inicio, fecha_fin, fecha_devolucion) " +
                     "VALUES (" +
                     "(SELECT codigo FROM libro WHERE isbn = ?)," +
@@ -205,6 +203,11 @@ public class AccesoPrestamo {
             sentencia.setString(3, fecha);
             sentencia.setString(4, fechaF);
 
+            int insertado = sentencia.executeUpdate();
+
+            if(insertado == 0){
+                throw new PrestamosException(PrestamosException.ERROR_LIBRO_NO_INSERTADO);
+            }
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             throw new BDException(BDException.ERROR_QUERY + e.getMessage());
@@ -238,8 +241,8 @@ public class AccesoPrestamo {
             ps.setString(2, dni);
             ps.setString(3, fecha_inicio);
 
-
             int resultado = ps.executeUpdate();
+
             if (resultado == 0) {
                 return false;
             }
@@ -262,7 +265,7 @@ public class AccesoPrestamo {
      * @param fecha_inicio Pide fecha inicio para dar de baja un prestamo
      * @throws BDException Gestion de exceptions
      */
-    public static void actualizarPrestamo(String isbn, String dni, String fecha_inicio) throws BDException {
+    public static void actualizarPrestamo(String isbn, String dni, String fecha_inicio) throws BDException, PrestamosException {
         Connection conexion = null;
         LocalDate fechaInicio = LocalDate.now();
         String fecha_devolucion = fechaInicio.getYear() + "-" + fechaInicio.getMonthValue() + "-" + fechaInicio.getDayOfMonth();
@@ -283,6 +286,11 @@ public class AccesoPrestamo {
             sentencia.setString(3, dni);
             sentencia.setString(4, fecha_inicio);
 
+            int insertado = sentencia.executeUpdate();
+
+            if(insertado == 0){
+                throw new PrestamosException(PrestamosException.ERROR_NO_SE_PUDO_ACTUALIZAR_PRESTAMO);
+            }
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             throw new BDException(BDException.ERROR_QUERY + e.getMessage());

@@ -9,6 +9,8 @@ import prestamos.Prestamo;
 import socios.AccesoSocio;
 import socios.Socio;
 import java.util.List;
+import java.util.Map;
+
 import exception.LibroException;
 import libros.AccesoLibro;
 import libros.Libro;
@@ -86,6 +88,7 @@ public class Main {
         boolean validado;
 
         List<Socio> socios;
+        Map<String, Object> mapa;
         List<Prestamo> prestamos;
         List<Libro> libros;
         Socio socio;
@@ -393,7 +396,9 @@ public class Main {
                                         }
                                     }while (!validado);
 
+                                    mapa = AccesoSocio.consultarLibrosPorDNI(dni);
 
+                                    System.out.println(AccesoSocio.toStringMap(mapa));
 
                                     do{
                                         isbn = Teclado.leerCadena("ISBN: ");
@@ -412,6 +417,11 @@ public class Main {
                                     break;
                                 case 3:
                                     System.out.println("Eliminando un préstamo, por datos identificativos, de la base de datos...");
+                                    titulo = Teclado.leerCadena("Titulo: ");
+                                    libros = AccesoLibro.consultarPorTituloPrestadosYNoDevueltos(titulo);
+
+                                    System.out.println(AccesoLibro.toStringList(libros));
+
                                     do{
                                         isbn = Teclado.leerCadena("ISBN: ");
                                         validado = Validaciones.validarISBN(isbn);
