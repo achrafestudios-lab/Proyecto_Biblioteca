@@ -88,7 +88,7 @@ public class Main {
         boolean validado;
 
         List<Socio> socios;
-        Map<String, Object> mapa;
+        Map<?, Object> mapa;
         List<Prestamo> prestamos;
         List<Libro> libros;
         Socio socio;
@@ -289,7 +289,7 @@ public class Main {
                                     }
                                     break;
                                 case 2:
-                                    System.out.println("Eliminando un socio, por código, de la base de datos....");
+                                    System.out.println("Eliminando un socio, por DNI, de la base de datos....");
                                     do{
                                         dni = Teclado.leerCadena("DNI: ");
                                         validado = Validaciones.validarDNI(dni);
@@ -361,6 +361,7 @@ public class Main {
                                     titulo = Teclado.leerCadena("Titulo: ");
                                     libros = AccesoLibro.consultarPorTituloSinPrestar(titulo);
 
+                                    System.out.println("Libros disponibles para prestar con el titulo: " + titulo);
                                     System.out.println(AccesoLibro.toStringList(libros));
 
                                     do{
@@ -398,6 +399,7 @@ public class Main {
 
                                     mapa = AccesoSocio.consultarLibrosPorDNI(dni);
 
+                                    System.out.println("Libros no devueltos del socio con DNI: " + dni);
                                     System.out.println(AccesoSocio.toStringMap(mapa));
 
                                     do{
@@ -420,6 +422,7 @@ public class Main {
                                     titulo = Teclado.leerCadena("Titulo: ");
                                     libros = AccesoLibro.consultarPorTituloPrestadosYNoDevueltos(titulo);
 
+                                    System.out.println("Libros encontrados con el titulo: " + titulo);
                                     System.out.println(AccesoLibro.toStringList(libros));
 
                                     do{

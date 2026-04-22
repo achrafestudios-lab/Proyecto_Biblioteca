@@ -1,5 +1,6 @@
 package socios;
 
+import comparator.OrdenarPorCodigoLibroComparator;
 import config.ConfigMySql;
 import exception.BDException;
 import exception.PrestamosException;
@@ -168,8 +169,8 @@ public class AccesoSocio {
         return socios;
     }
 
-    public static Map<String, Object> consultarLibrosPorDNI(String dni) throws PrestamosException {
-        Map<String , Object> libros = new TreeMap<>();
+    public static Map<Libro, Object> consultarLibrosPorDNI(String dni) throws PrestamosException {
+        Map<Libro , Object> libros = new TreeMap<>(new OrdenarPorCodigoLibroComparator());
         Connection conexion = null;
         PreparedStatement ps;
         dni = dni.toLowerCase();
@@ -197,7 +198,7 @@ public class AccesoSocio {
 
                 Libro LibroAux = new Libro(codigo, isbn, titulo, fechaInicio, anio_publicaccion, puntuacion);
 
-                libros.put(fechaInicio,LibroAux);
+                libros.put(LibroAux, fechaInicio);
             }
 
             if(libros.isEmpty()){
