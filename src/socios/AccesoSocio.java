@@ -18,7 +18,7 @@ public class AccesoSocio {
      * @param socio Socio a insertar
      * @return Devuelve true si se ha insertado correctamente false en caso contrario
      */
-    public static boolean insertarSocio(Socio socio) {
+    public static boolean insertarSocio(Socio socio) throws BDException{
         Connection conexion = null;
         PreparedStatement ps;
 
@@ -114,7 +114,7 @@ public class AccesoSocio {
             crearSocio(socios, rs);
 
             if (socios.isEmpty()) {
-                throw new SQLException(SociosException.SOCIOS_NO_ENCONTRADOS);
+                throw new SociosException(SociosException.SOCIOS_NO_ENCONTRADOS);
             }
         } catch (SQLException e) {
             throw new BDException(BDException.ERROR_QUERY + e.getMessage());
