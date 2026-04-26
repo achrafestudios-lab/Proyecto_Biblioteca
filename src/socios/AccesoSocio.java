@@ -154,7 +154,7 @@ public class AccesoSocio {
             crearSocio(socios, rs);
 
             if (socios.isEmpty()) {
-                throw new SQLException(SociosException.SOCIOS_NO_ENCONTRADOS_LOCALIDAD);
+                throw new SociosException(SociosException.SOCIOS_NO_ENCONTRADOS_LOCALIDAD);
             }
         } catch (SQLException e) {
             throw new BDException(BDException.ERROR_QUERY + e.getMessage());
@@ -227,7 +227,7 @@ public class AccesoSocio {
      * Este metodo consulta los socios que no tienen prestamos en la base de datos de la biblioteca
      * @return Devuelve una lista con los socios sin prestamos
      */
-    public static List<Socio> consultarSociosSinPrestamos() {
+    public static List<Socio> consultarSociosSinPrestamos() throws SociosException {
         List<Socio> socios = new LinkedList<>();
         Connection conexion = null;
         PreparedStatement ps;
@@ -244,7 +244,7 @@ public class AccesoSocio {
             crearSocio(socios, rs);
 
             if (socios.isEmpty()) {
-                throw new SQLException(SociosException.SOCIOS_NO_ENCONTRADOS_SIN_PRESTAMOS);
+                throw new SociosException(SociosException.SOCIOS_NO_ENCONTRADOS_SIN_PRESTAMOS);
             }
         } catch (SQLException e) {
             throw new BDException(BDException.ERROR_QUERY + e.getMessage());
