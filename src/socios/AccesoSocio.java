@@ -240,7 +240,6 @@ public class AccesoSocio {
             ps = conexion.prepareStatement(query);
 
             ResultSet rs = ps.executeQuery();
-
             crearSocio(socios, rs);
 
             if (socios.isEmpty()) {
