@@ -58,7 +58,7 @@ public class Main {
         System.out.println("\n===== MENÚ SOCIOS =====");
         System.out.println(" 0. Volver.");
         System.out.println(" 1. Insertar un socio en la base de datos.");
-        System.out.println(" 2. Eliminar un socio, por código, de la base de datos.");
+        System.out.println(" 2. Eliminar un socio, por DNI, de la base de datos.");
         System.out.println(" 3. Consultar todos los socios de la base de datos.");
         System.out.println(" 4. Consultar varios socios, por localidad, de la base de datos, ordenados por nombre ascendente.");
         System.out.println(" 5. Consultar los socios sin préstamos de la base de datos.");
