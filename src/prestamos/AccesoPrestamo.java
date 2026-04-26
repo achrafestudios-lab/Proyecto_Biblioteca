@@ -13,32 +13,19 @@ import java.time.LocalDate;
 
 public class AccesoPrestamo {
     /**
-     * Este metodo consulta todos los prestamos existentes en la base de datos de la biblioteca
+     * Este metodo consulta todos los préstamos existentes en la base de datos de la biblioteca
      * @return Devuelve una lista con todos los prestamos
-     * @throws PrestamosException Gestion de excepciones de prestamos
+     * @throws PrestamosException Gestion de excepciones de préstamos
      */
     public static List<Prestamo> consultarPrestamos() throws PrestamosException {
         List<Prestamo> prestamos = new LinkedList<>();
         Connection conexion = null;
-        PreparedStatement ps;
 
         try {
             conexion = ConfigMySql.abrirConexion();
 
             String query = "SELECT * FROM prestamo";
-            ps = conexion.prepareStatement(query);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                int codigoLibro = rs.getInt("codigo_Libro");
-                int codigoSocio = rs.getInt("codigo_socio");
-                String fechaInicio = rs.getString("fecha_inicio");
-                String fechaFin = rs.getString("fecha_fin");
-                String fechaDevolucion = rs.getString("fecha_devolucion");
-
-                Prestamo prestamoAux = new Prestamo(codigoLibro, codigoSocio, fechaInicio, fechaFin, fechaDevolucion);
-                prestamos.add(prestamoAux);
-            }
+            prestamos(prestamos, conexion, query);
 
             if(prestamos.isEmpty()){
                 throw new PrestamosException(PrestamosException.PRESTAMOS_NO_ENCONTRADOS);
@@ -58,31 +45,18 @@ public class AccesoPrestamo {
 
     /**
      * Este metodo consulta todos los prestamos no devueltos en la base de datos de la biblioteca
-     * @return Devuelve una lista con los prestamos que no han sido devueltos
-     * @throws PrestamosException Gestion de excepciones de prestamos
+     * @return Devuelve una lista con los préstamos que no han sido devueltos
+     * @throws PrestamosException Gestion de excepciones de préstamos
      */
     public static List<Prestamo> consultarPrestamosNoDevueltos() throws PrestamosException {
         List<Prestamo> prestamos = new LinkedList<>();
         Connection conexion = null;
-        PreparedStatement ps;
 
         try {
             conexion = ConfigMySql.abrirConexion();
 
             String query = "SELECT * FROM prestamo WHERE fecha_devolucion IS NULL";
-            ps = conexion.prepareStatement(query);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                int codigoLibro = rs.getInt("codigo_Libro");
-                int codigoSocio = rs.getInt("codigo_socio");
-                String fechaInicio = rs.getString("fecha_inicio");
-                String fechaFin = rs.getString("fecha_fin");
-                String fechaDevolucion = rs.getString("fecha_devolucion");
-
-                Prestamo prestamoAux = new Prestamo(codigoLibro, codigoSocio, fechaInicio, fechaFin, fechaDevolucion);
-                prestamos.add(prestamoAux);
-            }
+            prestamos(prestamos, conexion, query);
 
             if(prestamos.isEmpty()){
                 throw new PrestamosException(PrestamosException.PRESTAMOS_NO_DEVUELTOS_INEXISTENTES);
@@ -100,11 +74,27 @@ public class AccesoPrestamo {
         return prestamos;
     }
 
+    public static void prestamos(List<Prestamo> prestamos, Connection conexion, String query) throws SQLException {
+        PreparedStatement ps = conexion.prepareStatement(query);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            int codigoLibro = rs.getInt("codigo_Libro");
+            int codigoSocio = rs.getInt("codigo_socio");
+            String fechaInicio = rs.getString("fecha_inicio");
+            String fechaFin = rs.getString("fecha_fin");
+            String fechaDevolucion = rs.getString("fecha_devolucion");
+
+            Prestamo prestamoAux = new Prestamo(codigoLibro, codigoSocio, fechaInicio, fechaFin, fechaDevolucion);
+            prestamos.add(prestamoAux);
+        }
+    }
+
     /**
-     * Este metodo consulta los prestamos por fecha de inicio en la base de datos de la biblioteca
+     * Este metodo consulta los préstamos por fecha de inicio en la base de datos de la biblioteca
      * @param fechaInicio Fecha de inicio del prestamo
-     * @return Devuelve una lista con el dni, nombre, isbn, titulo y fecha de devolucion de los prestamos en esa fecha
-     * @throws PrestamosException Gestion de excepciones de prestamos
+     * @return Devuelve una lista con el dni, nombre, isbn, título y fecha de devolucion de los préstamos en esa fecha
+     * @throws PrestamosException Gestion de excepciones de préstamos
      */
     public static List<ConsultarPrestamosPorFechaInicio> consultarPrestamosPorFechaInicio(String fechaInicio) throws PrestamosException {
         List<ConsultarPrestamosPorFechaInicio> prestamos = new LinkedList<>();
@@ -153,7 +143,7 @@ public class AccesoPrestamo {
      * @param isbn ISBN del libro a prestar
      * @param dni DNI del socio que realiza el prestamo
      * @throws BDException Gestion de excepciones de base de datos
-     * @throws PrestamosException Gestion de excepciones de prestamos
+     * @throws PrestamosException Gestion de excepciones de préstamos
      */
     public static void insertarPrestamo(String isbn, String dni) throws BDException, PrestamosException {
         Connection conexion = null;
@@ -254,7 +244,7 @@ public class AccesoPrestamo {
      * @param dni DNI del socio del prestamo
      * @param fecha_inicio Fecha de inicio del prestamo
      * @throws BDException Gestion de excepciones de base de datos
-     * @throws PrestamosException Gestion de excepciones de prestamos
+     * @throws PrestamosException Gestion de excepciones de préstamos
      */
     public static void actualizarPrestamo(String isbn, String dni, String fecha_inicio) throws BDException, PrestamosException {
         Connection conexion = null;

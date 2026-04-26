@@ -138,8 +138,8 @@ public class AccesoLibro {
     /**
      * Este metodo consulta los libros por titulo que no estan prestados en la base de datos de la biblioteca
      *
-     * @param titulo Pide titulo del libro
-     * @return Devuelve una lista de libros que coinciden con el titulo y no estan prestados
+     * @param titulo Pide título del libro
+     * @return Devuelve una lista de libros que coinciden con el título y no están prestados
      * @throws BDException    Gestion de excepciones de base de datos
      * @throws LibroException Gestion de excepciones de libro
      */
@@ -178,10 +178,10 @@ public class AccesoLibro {
     }
 
     /**
-     * Este metodo consulta los libros por titulo que estan prestados y no devueltos en la base de datos de la biblioteca
+     * Este metodo consulta los libros por título que están prestados y no devueltos en la base de datos de la biblioteca
      *
-     * @param titulo Pide titulo del libro
-     * @return Devuelve una lista de libros que coinciden con el titulo y estan prestados sin devolver
+     * @param titulo Pide título del libro
+     * @return Devuelve una lista de libros que coinciden con el título y están prestados sin devolver
      * @throws BDException    Gestion de excepciones de base de datos
      * @throws LibroException Gestion de excepciones de libro
      */

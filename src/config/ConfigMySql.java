@@ -16,11 +16,11 @@ public class ConfigMySql {
 
 	/**
 	 * Abre conexi�n con la base de datos mysql
-	 * @return
-	 * @throws BDException
+	 * @return Connection
+	 * @throws BDException BDException
 	 */
 	public static Connection abrirConexion() throws BDException {
-		Connection conexion = null;
+		Connection conexion;
 		
 		try {
 			// Carga el driver
@@ -40,8 +40,8 @@ public class ConfigMySql {
 
 	/**
 	 * Cierra conexion con la base de datos
-	 * @param conexion
-	 * @throws BDException
+	 * @param conexion connection
+	 * @throws BDException BDException
 	 */
 	public static void cerrarConexion(Connection conexion) throws BDException {
 				
