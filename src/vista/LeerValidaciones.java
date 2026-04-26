@@ -37,7 +37,7 @@ public class LeerValidaciones {
             validado = Validaciones.validarAnio(anio);
 
             if (!validado) {
-                System.err.println("El año no es valido.");
+                System.err.println("El año no es valido. (YYYY)");
             }
         } while (!validado);
 
@@ -77,7 +77,7 @@ public class LeerValidaciones {
             validado = Validaciones.validarFecha(fecha);
 
             if (!validado) {
-                System.err.println("Fecha invalida.");
+                System.err.println("Fecha invalida. (YYYY-MM-DD)");
             }
         } while (!validado);
 
@@ -97,7 +97,7 @@ public class LeerValidaciones {
             validado = Validaciones.validarDNI(dni);
 
             if (!validado) {
-                System.err.println("DNI invalido.");
+                System.err.println("DNI invalido. (8 numeros y una letra al final)");
             }
         } while (!validado);
 
@@ -117,7 +117,7 @@ public class LeerValidaciones {
             validado = Validaciones.validarNombre(nombre);
 
             if (!validado) {
-                System.err.println("Nombre invalido.");
+                System.err.println("Nombre invalido. (No puede tener numeros)");
             }
         } while (!validado);
 
@@ -137,7 +137,7 @@ public class LeerValidaciones {
             validado = Validaciones.validarTelefono(telefono);
 
             if (!validado) {
-                System.err.println("Telefono invalido.");
+                System.err.println("Telefono invalido. (Tiene que tener 9 numeros y no debe contener letras)");
             }
         } while (!validado);
 
@@ -157,7 +157,7 @@ public class LeerValidaciones {
             validado = Validaciones.validarCorreo(correo);
 
             if (!validado) {
-                System.err.println("Correo invalido.");
+                System.err.println("Correo invalido. (No tiene el formato)");
             }
         } while (!validado);
 
