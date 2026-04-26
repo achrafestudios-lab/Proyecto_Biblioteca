@@ -1,4 +1,5 @@
 package vista;
+
 import entrada.Teclado;
 import exception.BDException;
 import exception.PrestamosException;
@@ -10,7 +11,6 @@ import socios.AccesoSocio;
 import socios.Socio;
 import java.util.List;
 import java.util.Map;
-
 import exception.LibroException;
 import libros.AccesoLibro;
 import libros.Libro;
@@ -72,6 +72,35 @@ public class Main {
                 "préstamos realizados en una fecha de la base de datos.");
 
         return Teclado.leerEntero("Elige una opción: ");
+    }
+
+    /**
+     * Este metodo convierte una lista en una cadena de texto
+     * @param lista Lista de objetos a convertir
+     * @return Devuelve una cadena con todos los elementos de la lista separados por saltos de linea
+     */
+    public static String toStringList(List<?> lista) {
+        String cadena = "";
+
+        for (Object o: lista) {
+            cadena += o + "\n";
+        }
+
+        return cadena;
+    }
+
+    /**
+     * Este metodo convierte un mapa en una cadena de texto
+     * @param mapa Mapa con los datos a convertir
+     * @return Devuelve una cadena con las claves y valores del mapa formateados
+     */
+    public static String toStringMap(Map<?, Object> mapa) {
+        StringBuilder cadena = new StringBuilder();
+
+        for(Map.Entry<?, Object> entry : mapa.entrySet()) {
+            cadena.append("Fecha inicio [").append(entry.getKey()).append("]").append(": ").append(entry.getValue()).append("\n");
+        }
+        return cadena.toString();
     }
 
     public static void main(String[] args) {
@@ -182,7 +211,7 @@ public class Main {
                                     if (libros.isEmpty()) {
                                         System.err.println("No hay libros en la base de datos.");
                                     } else {
-                                        System.out.println(AccesoLibro.toStringList(libros));
+                                        System.out.println(toStringList(libros));
                                     }
                                     break;
                                 case 4:
@@ -194,7 +223,7 @@ public class Main {
                                     if (libros.isEmpty()) {
                                         System.err.println("No se han encontrado libros de ese escritor.");
                                     } else {
-                                        System.out.println(AccesoLibro.toStringList(libros));
+                                        System.out.println(toStringList(libros));
                                     }
                                     break;
                                 case 5:
@@ -204,7 +233,7 @@ public class Main {
                                     if (libros.isEmpty()) {
                                         System.err.println("No hay libros disponibles (todos están prestados).");
                                     } else {
-                                        System.out.println(AccesoLibro.toStringList(libros));
+                                        System.out.println(toStringList(libros));
                                     }
                                     break;
                                 case 6:
@@ -222,7 +251,7 @@ public class Main {
                                     if (libros.isEmpty()) {
                                         System.err.println("No hay libros devueltos en esa fecha.");
                                     } else {
-                                        System.out.println(AccesoLibro.toStringList(libros));
+                                        System.out.println(toStringList(libros));
                                     }
                                     break;
                                 default:
@@ -306,7 +335,7 @@ public class Main {
                                     System.out.println("Consultando todos los socios de la base de datos...");
                                     socios = AccesoSocio.consultarSocios();
 
-                                    System.out.println(AccesoSocio.toStringList(socios));
+                                    System.out.println(toStringList(socios));
                                     System.out.println("Se han encontrado " + socios.size() + " socios en la  base de datos.");
                                     break;
 
@@ -315,7 +344,7 @@ public class Main {
                                     ciudad = Teclado.leerCadena("Ciudad: ");
 
                                     socios = AccesoSocio.consultarSociosPorLocalidadOrdenadoPorNombreAsc(ciudad);
-                                    System.out.println(AccesoSocio.toStringList(socios));
+                                    System.out.println(toStringList(socios));
                                     System.out.println("Se han encontrado " + socios.size() + " socios en la  base de datos.");
                                     break;
 
@@ -323,7 +352,7 @@ public class Main {
                                     System.out.println("Consultando los socios sin préstamos de la base de datos...");
                                     socios = AccesoSocio.consultarSociosSinPrestamos();
 
-                                    System.out.println(AccesoSocio.toStringList(socios));
+                                    System.out.println(toStringList(socios));
                                     System.out.println("Se han encontrado " + socios.size() + " socios en la  base de datos.");
                                     break;
                                 case 6:
@@ -339,7 +368,7 @@ public class Main {
 
                                     socios = AccesoSocio.consultarSociosPorPrestamoEnFecha(fecha);
 
-                                    System.out.println(AccesoSocio.toStringList(socios));
+                                    System.out.println(toStringList(socios));
                                     System.out.println("Se han encontrado " + socios.size() + " socios en la base de datos.");
                                     break;
                                 default:
@@ -362,7 +391,7 @@ public class Main {
                                     libros = AccesoLibro.consultarPorTituloSinPrestar(titulo);
 
                                     System.out.println("Libros disponibles para prestar con el titulo: " + titulo);
-                                    System.out.println(AccesoLibro.toStringList(libros));
+                                    System.out.println(toStringList(libros));
 
                                     do{
                                         isbn = Teclado.leerCadena("ISBN: ");
@@ -400,7 +429,7 @@ public class Main {
                                     mapa = AccesoSocio.consultarLibrosPorDNI(dni);
 
                                     System.out.println("Libros no devueltos del socio con DNI: " + dni);
-                                    System.out.println(AccesoSocio.toStringMap(mapa));
+                                    System.out.println(toStringMap(mapa));
 
                                     do{
                                         isbn = Teclado.leerCadena("ISBN: ");
@@ -423,7 +452,7 @@ public class Main {
                                     libros = AccesoLibro.consultarPorTituloPrestadosYNoDevueltos(titulo);
 
                                     System.out.println("Libros encontrados con el titulo: " + titulo);
-                                    System.out.println(AccesoLibro.toStringList(libros));
+                                    System.out.println(toStringList(libros));
 
                                     do{
                                         isbn = Teclado.leerCadena("ISBN: ");
@@ -457,14 +486,14 @@ public class Main {
                                     System.out.println("Consultando todos los préstamos de la base de datos...");
                                     prestamos = AccesoPrestamo.consultarPrestamos();
 
-                                    System.out.println(AccesoPrestamo.toStringList(prestamos));
+                                    System.out.println(toStringList(prestamos));
                                     System.out.println("Se han consultado " + prestamos.size() + " prestamos en la base de datos.");
                                     break;
                                 case 5:
                                     System.out.println("Consultando los préstamos no devueltos de la base de datos....");
                                     prestamos = AccesoPrestamo.consultarPrestamosNoDevueltos();
 
-                                    System.out.println(AccesoPrestamo.toStringList(prestamos));
+                                    System.out.println(toStringList(prestamos));
                                     System.out.println("Se han consultado " + prestamos.size() + " prestamos en la base de datos.");
                                     break;
                                 case 6:
@@ -479,7 +508,7 @@ public class Main {
                                     }while (!validado);
                                     contenido = AccesoPrestamo.consultarPrestamosPorFechaInicio(fecha);
 
-                                    System.out.println(AccesoPrestamo.toStringList(contenido));
+                                    System.out.println(toStringList(contenido));
                                     System.out.println("Se han consultado " + contenido.size() + " prestamos en la base de datos.");
                                     break;
                                 default:

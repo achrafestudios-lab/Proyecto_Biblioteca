@@ -3,7 +3,6 @@ package libros;
 import config.ConfigMySql;
 import exception.BDException;
 import exception.LibroException;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,10 +13,11 @@ import java.util.List;
 public class AccesoLibro {
 
     /**
+     * Este metodo inserta un libro en la base de datos de la biblioteca
      *
      * @param libro Pide un libro para inserter
      * @return Devuelve true si se ha insertado de lo contrast false
-     * @throws BDException Gestion de exceptions
+     * @throws BDException Gestion de excepciones de base de datos
      */
     public static boolean insertarLibros(Libro libro) throws BDException {
         Connection conexion = null;
@@ -60,10 +60,11 @@ public class AccesoLibro {
     }
 
     /**
+     * Este metodo elimina un libro de la base de datos de la biblioteca
      *
      * @param isbn Pide un ISBN al usuario
-     * @throws BDException Gestion de exceptions
-     * @throws LibroException Gestion de exceptions
+     * @throws BDException    Gestion de excepciones de base de datos
+     * @throws LibroException Gestion de excepciones de libro
      */
     public static void eliminarLibro(String isbn) throws BDException, LibroException {
         PreparedStatement ps;
@@ -77,7 +78,7 @@ public class AccesoLibro {
             ps.setString(1, isbn);
             ResultSet rs = ps.executeQuery();
 
-            if(rs.next()) {
+            if (rs.next()) {
                 throw new LibroException(LibroException.ERROR_LIBRO_HA_SIDO_PRESTADO);
             }
 
@@ -101,9 +102,10 @@ public class AccesoLibro {
     }
 
     /**
+     * Este metodo consulta todos los libros de la base de datos de la biblioteca
      *
-     * @return List de todos los libros
-     * @throws BDException Gestion de exceptions
+     * @return Devuelve una lista con todos los libros
+     * @throws BDException Gestion de excepciones de base de datos
      */
     public static List<Libro> consultarTodosLibros() throws BDException {
         List<Libro> LibrosAux = new ArrayList<>();
@@ -134,11 +136,12 @@ public class AccesoLibro {
     }
 
     /**
+     * Este metodo consulta los libros por titulo que no estan prestados en la base de datos de la biblioteca
      *
-     * @param titulo Pide titulo
-     * @return Lista de titulos no prestados
-     * @throws BDException Gestion de exceptions
-     * @throws LibroException Gestion de exceptions
+     * @param titulo Pide titulo del libro
+     * @return Devuelve una lista de libros que coinciden con el titulo y no estan prestados
+     * @throws BDException    Gestion de excepciones de base de datos
+     * @throws LibroException Gestion de excepciones de libro
      */
     public static List<Libro> consultarPorTituloSinPrestar(String titulo) throws BDException, LibroException {
         List<Libro> librosAux = new ArrayList<>();
@@ -158,7 +161,7 @@ public class AccesoLibro {
 
             crearLibro(librosAux, resultados);
 
-            if(librosAux.isEmpty()){
+            if (librosAux.isEmpty()) {
                 throw new LibroException(LibroException.ERROR_NO_EXISTE_EL_LIBRO_NOMBRE);
             }
         } catch (SQLException e) {
@@ -174,6 +177,14 @@ public class AccesoLibro {
         return librosAux;
     }
 
+    /**
+     * Este metodo consulta los libros por titulo que estan prestados y no devueltos en la base de datos de la biblioteca
+     *
+     * @param titulo Pide titulo del libro
+     * @return Devuelve una lista de libros que coinciden con el titulo y estan prestados sin devolver
+     * @throws BDException    Gestion de excepciones de base de datos
+     * @throws LibroException Gestion de excepciones de libro
+     */
     public static List<Libro> consultarPorTituloPrestadosYNoDevueltos(String titulo) throws BDException, LibroException {
         List<Libro> librosAux = new ArrayList<>();
         PreparedStatement ps;
@@ -192,7 +203,7 @@ public class AccesoLibro {
 
             crearLibro(librosAux, resultados);
 
-            if(librosAux.isEmpty()){
+            if (librosAux.isEmpty()) {
                 throw new LibroException(LibroException.ERROR_NO_EXISTE_EL_LIBRO_NOMBRE);
             }
         } catch (SQLException e) {
@@ -209,10 +220,11 @@ public class AccesoLibro {
     }
 
     /**
+     * Este metodo consulta los libros por autor ordenados por puntuacion de mayor a menor en la base de datos de la biblioteca
      *
-     * @param autor Autor para filtrar
-     * @return Devuelve todos los libros de un autor ordenados de puntuacion mas peuqeña a grande (des)
-     * @throws BDException Gestion de exceptions
+     * @param autor Autor para filtrar los libros
+     * @return Devuelve una lista de libros del autor ordenados por puntuacion descendente
+     * @throws BDException Gestion de excepciones de base de datos
      */
     public static List<Libro> consultarLibrosPorAutorYPuntuacionDes(String autor) throws BDException {
         List<Libro> LibrosAux = new ArrayList<>();
@@ -244,9 +256,10 @@ public class AccesoLibro {
     }
 
     /**
+     * Este metodo consulta todos los libros que no han sido prestados en la base de datos de la biblioteca
      *
      * @return Devuelve una lista con todos los libros no prestados
-     * @throws BDException Gestion de exceptions
+     * @throws BDException Gestion de excepciones de base de datos
      */
     public static List<Libro> consultarLibrosNoPrestados() throws BDException {
         List<Libro> LibrosAux = new ArrayList<>();
@@ -277,13 +290,14 @@ public class AccesoLibro {
     }
 
     /**
+     * Este metodo consulta los libros devueltos filtrando por fecha de devolucion en la base de datos de la biblioteca
      *
-     * @param fecha_devolucion Pide una fecha para consultar todos los libros
-     * @return Da una lista con todos los libros por fecha
-     * @throws BDException Gestion de exceptions
-     * @throws LibroException Gestion de exceptions
+     * @param fecha_devolucion Fecha de devolucion para filtrar los libros
+     * @return Devuelve una lista con los libros devueltos en la fecha indicada
+     * @throws BDException    Gestion de excepciones de base de datos
+     * @throws LibroException Gestion de excepciones de libro
      */
-    public static List<Libro> consultarDevueltosPorFecha(String fecha_devolucion)throws BDException, LibroException{
+    public static List<Libro> consultarDevueltosPorFecha(String fecha_devolucion) throws BDException, LibroException {
         List<Libro> LibrosAux = new ArrayList<>();
         PreparedStatement ps;
         Connection conexion = null;
@@ -311,6 +325,13 @@ public class AccesoLibro {
         return LibrosAux;
     }
 
+    /**
+     * Este metodo crea objetos Libro a partir de un ResultSet y los agrega a una lista
+     *
+     * @param librosAux  Lista donde se almacenan los libros creados
+     * @param resultados ResultSet con los datos de la consulta
+     * @throws SQLException Gestion de excepciones
+     */
     private static void crearLibro(List<Libro> librosAux, ResultSet resultados) throws SQLException {
         while (resultados.next()) {
             int codigo = resultados.getInt("codigo");
@@ -327,13 +348,4 @@ public class AccesoLibro {
         }
     }
 
-    public static String toStringList(List<?> lista) {
-        String cadena = "";
-
-        for (Object o: lista) {
-            cadena += o + "\n";
-        }
-
-        return cadena;
-    }
 }

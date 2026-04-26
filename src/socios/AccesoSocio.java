@@ -6,7 +6,6 @@ import exception.BDException;
 import exception.PrestamosException;
 import exception.SociosException;
 import libros.Libro;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,6 +13,11 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class AccesoSocio {
+    /**
+     * Este metodo inserta un socio en la base de datos de la biblioteca
+     * @param socio Socio a insertar
+     * @return Devuelve true si se ha insertado correctamente false en caso contrario
+     */
     public static boolean insertarSocio(Socio socio) {
         Connection conexion = null;
         PreparedStatement ps;
@@ -48,6 +52,11 @@ public class AccesoSocio {
         return true;
     }
 
+    /**
+     * Este metodo elimina un socio de la base de datos de la biblioteca
+     * @param dni DNI del socio a eliminar
+     * @throws SociosException Gestion de excepciones de socios
+     */
     public static void eliminarSocio(String dni) throws SociosException {
         Connection conexion = null;
         PreparedStatement ps;
@@ -84,6 +93,11 @@ public class AccesoSocio {
         }
     }
 
+    /**
+     * Este metodo consulta todos los socios de la base de datos de la biblioteca
+     * @return Devuelve una lista con todos los socios
+     * @throws SociosException Gestion de excepciones de socios
+     */
     public static List<Socio> consultarSocios() throws SociosException {
         List<Socio> socios = new LinkedList<>();
         Connection conexion = null;
@@ -97,17 +111,7 @@ public class AccesoSocio {
             ps = conexion.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
 
-            while (rs.next()) {
-                int codigo = rs.getInt("codigo");
-                String dni = rs.getString("dni");
-                String nombre = rs.getString("nombre");
-                String domicilio = rs.getString("domicilio");
-                String telefono = rs.getString("telefono");
-                String correo = rs.getString("correo");
-
-                Socio socioAux = new Socio(codigo, dni, nombre, domicilio, telefono, correo);
-                socios.add(socioAux);
-            }
+            crearSocio(socios, rs);
 
             if (socios.isEmpty()) {
                 throw new SQLException(SociosException.SOCIOS_NO_ENCONTRADOS);
@@ -125,6 +129,12 @@ public class AccesoSocio {
         return socios;
     }
 
+    /**
+     * Este metodo consulta los socios por localidad ordenados por nombre de forma ascendente en la base de datos de la biblioteca
+     * @param localidad Localidad a filtrar
+     * @return Devuelve una lista de socios que coinciden con la localidad ordenados por nombre ascendente
+     * @throws SociosException Gestion de excepciones de socios
+     */
     public static List<Socio> consultarSociosPorLocalidadOrdenadoPorNombreAsc(String localidad) throws SociosException {
         List<Socio> socios = new LinkedList<>();
         Connection conexion = null;
@@ -141,17 +151,7 @@ public class AccesoSocio {
 
             ResultSet rs = ps.executeQuery();
 
-            while (rs.next()) {
-                int codigo = rs.getInt("codigo");
-                String dni = rs.getString("dni");
-                String nombre = rs.getString("nombre");
-                String domicilio = rs.getString("domicilio");
-                String telefono = rs.getString("telefono");
-                String correo = rs.getString("correo");
-
-                Socio socioAux = new Socio(codigo, dni, nombre, domicilio, telefono, correo);
-                socios.add(socioAux);
-            }
+            crearSocio(socios, rs);
 
             if (socios.isEmpty()) {
                 throw new SQLException(SociosException.SOCIOS_NO_ENCONTRADOS_LOCALIDAD);
@@ -169,8 +169,14 @@ public class AccesoSocio {
         return socios;
     }
 
+    /**
+     * Este metodo consulta los libros prestados a un socio por su DNI en la base de datos de la biblioteca
+     * @param dni DNI del socio a consultar
+     * @return Devuelve un mapa con los libros prestados y su fecha de inicio
+     * @throws PrestamosException Gestion de excepciones de prestamos
+     */
     public static Map<Libro, Object> consultarLibrosPorDNI(String dni) throws PrestamosException {
-        Map<Libro , Object> libros = new TreeMap<>(new OrdenarPorCodigoLibroComparator());
+        Map<Libro, Object> libros = new TreeMap<>(new OrdenarPorCodigoLibroComparator());
         Connection conexion = null;
         PreparedStatement ps;
         dni = dni.toLowerCase();
@@ -201,10 +207,10 @@ public class AccesoSocio {
                 libros.put(LibroAux, fechaInicio);
             }
 
-            if(libros.isEmpty()){
+            if (libros.isEmpty()) {
                 throw new PrestamosException(PrestamosException.PRESTAMOS_NO_DEVUELTOS_INEXISTENTES);
             }
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             throw new BDException(BDException.ERROR_QUERY + e.getMessage());
         } catch (BDException e) {
             throw new BDException(BDException.ERROR_ABRIR_CONEXION + e.getMessage());
@@ -218,8 +224,8 @@ public class AccesoSocio {
     }
 
     /**
-     *
-     * @return Socios sin prestamos
+     * Este metodo consulta los socios que no tienen prestamos en la base de datos de la biblioteca
+     * @return Devuelve una lista con los socios sin prestamos
      */
     public static List<Socio> consultarSociosSinPrestamos() {
         List<Socio> socios = new LinkedList<>();
@@ -235,17 +241,7 @@ public class AccesoSocio {
 
             ResultSet rs = ps.executeQuery();
 
-            while (rs.next()) {
-                int codigo = rs.getInt("codigo");
-                String dni = rs.getString("dni");
-                String nombre = rs.getString("nombre");
-                String domicilio = rs.getString("domicilio");
-                String telefono = rs.getString("telefono");
-                String correo = rs.getString("correo");
-
-                Socio socioAux = new Socio(codigo, dni, nombre, domicilio, telefono, correo);
-                socios.add(socioAux);
-            }
+            crearSocio(socios, rs);
 
             if (socios.isEmpty()) {
                 throw new SQLException(SociosException.SOCIOS_NO_ENCONTRADOS_SIN_PRESTAMOS);
@@ -263,7 +259,13 @@ public class AccesoSocio {
         return socios;
     }
 
-    public static List<Socio> consultarSociosPorPrestamoEnFecha(String fecha) throws SociosException{
+    /**
+     * Este metodo consulta los socios que han realizado un prestamo en una fecha concreta en la base de datos de la biblioteca
+     * @param fecha Fecha de inicio del prestamo
+     * @return Devuelve una lista con los socios que tienen prestamos en esa fecha
+     * @throws SociosException Gestion de excepciones de socios
+     */
+    public static List<Socio> consultarSociosPorPrestamoEnFecha(String fecha) throws SociosException {
         List<Socio> socios = new LinkedList<>();
         Connection conexion = null;
         PreparedStatement ps;
@@ -277,17 +279,7 @@ public class AccesoSocio {
 
             ResultSet rs = ps.executeQuery();
 
-            while (rs.next()) {
-                int codigo = rs.getInt("codigo");
-                String dni = rs.getString("dni");
-                String nombre = rs.getString("nombre");
-                String domicilio = rs.getString("domicilio");
-                String telefono = rs.getString("telefono");
-                String correo = rs.getString("correo");
-
-                Socio socioAux = new Socio(codigo, dni, nombre, domicilio, telefono, correo);
-                socios.add(socioAux);
-            }
+            crearSocio(socios, rs);
 
             if (socios.isEmpty()) {
                 throw new SociosException(SociosException.SOCIOS_NO_ENCONTRADOS_CON_PRESTAMOS);
@@ -305,21 +297,24 @@ public class AccesoSocio {
         return socios;
     }
 
-    public static String toStringList(List<Socio> socios) {
-        String cadena = "";
+    /**
+     * Este metodo crea objetos Socio a partir de un ResultSet y los agrega a una lista
+     * @param socios Lista donde se almacenan los socios creados
+     * @param rs datos de la consulta
+     * @throws SQLException Gestion de excepciones
+     */
+    private static void crearSocio(List<Socio> socios, ResultSet rs) throws SQLException {
+        while (rs.next()) {
+            int codigo = rs.getInt("codigo");
+            String dni = rs.getString("dni");
+            String nombre = rs.getString("nombre");
+            String domicilio = rs.getString("domicilio");
+            String telefono = rs.getString("telefono");
+            String correo = rs.getString("correo");
 
-        for (Socio socioAux : socios) {
-            cadena += socioAux + "\n";
+            Socio socioAux = new Socio(codigo, dni, nombre, domicilio, telefono, correo);
+            socios.add(socioAux);
         }
-        return cadena;
     }
 
-    public static String toStringMap(Map<?, Object> mapa) {
-        StringBuilder cadena = new StringBuilder();
-
-        for(Map.Entry<?, Object> entry : mapa.entrySet()) {
-            cadena.append("Fecha inicio [").append(entry.getKey()).append("]").append(": ").append(entry.getValue()).append("\n");
-        }
-        return cadena.toString();
-    }
 }

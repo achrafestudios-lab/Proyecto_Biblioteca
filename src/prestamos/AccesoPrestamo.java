@@ -1,4 +1,5 @@
 package prestamos;
+
 import config.ConfigMySql;
 import exception.BDException;
 import exception.PrestamosException;
@@ -8,14 +9,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
-
 import java.time.LocalDate;
 
 public class AccesoPrestamo {
     /**
-     *
-     * @return Lista todos los prestamos existentes
-     * @throws PrestamosException Por si no hay prestamos en la base de datos
+     * Este metodo consulta todos los prestamos existentes en la base de datos de la biblioteca
+     * @return Devuelve una lista con todos los prestamos
+     * @throws PrestamosException Gestion de excepciones de prestamos
      */
     public static List<Prestamo> consultarPrestamos() throws PrestamosException {
         List<Prestamo> prestamos = new LinkedList<>();
@@ -57,9 +57,9 @@ public class AccesoPrestamo {
     }
 
     /**
-     *
-     * @return Lista con todos los prestamos no devueltos
-     * @throws PrestamosException Por si todos los prestamos estan devueltos
+     * Este metodo consulta todos los prestamos no devueltos en la base de datos de la biblioteca
+     * @return Devuelve una lista con los prestamos que no han sido devueltos
+     * @throws PrestamosException Gestion de excepciones de prestamos
      */
     public static List<Prestamo> consultarPrestamosNoDevueltos() throws PrestamosException {
         List<Prestamo> prestamos = new LinkedList<>();
@@ -101,10 +101,10 @@ public class AccesoPrestamo {
     }
 
     /**
-     *
-     * @param fechaInicio fecha
-     * @return Lista con el dni, nombre, isbn, titulo y fecha de devolucion de un prestamo por fecha
-     * @throws PrestamosException Si no hay prestamos en esa fecha
+     * Este metodo consulta los prestamos por fecha de inicio en la base de datos de la biblioteca
+     * @param fechaInicio Fecha de inicio del prestamo
+     * @return Devuelve una lista con el dni, nombre, isbn, titulo y fecha de devolucion de los prestamos en esa fecha
+     * @throws PrestamosException Gestion de excepciones de prestamos
      */
     public static List<ConsultarPrestamosPorFechaInicio> consultarPrestamosPorFechaInicio(String fechaInicio) throws PrestamosException {
         List<ConsultarPrestamosPorFechaInicio> prestamos = new LinkedList<>();
@@ -148,22 +148,12 @@ public class AccesoPrestamo {
         return prestamos;
     }
 
-    public static String toStringList(List<?> lista) {
-        String cadena = "";
-
-        for (Object o: lista) {
-            cadena += o + "\n";
-        }
-
-        return cadena;
-    }
-
     /**
-     *
-     * @param isbn Pide ISBN
-     * @param dni Pide DNI
-     * @throws BDException Gestion de exceptions
-     * @throws PrestamosException Por si todos los prestamos estan devueltos
+     * Este metodo inserta un prestamo en la base de datos de la biblioteca
+     * @param isbn ISBN del libro a prestar
+     * @param dni DNI del socio que realiza el prestamo
+     * @throws BDException Gestion de excepciones de base de datos
+     * @throws PrestamosException Gestion de excepciones de prestamos
      */
     public static void insertarPrestamo(String isbn, String dni) throws BDException, PrestamosException {
         Connection conexion = null;
@@ -219,12 +209,12 @@ public class AccesoPrestamo {
     }
 
     /**
-     *
-     * @param isbn Pide ISBN
-     * @param dni Pide DNI
-     * @param fecha_inicio Pide fecha inico de el prestamo
-     * @return Da true si ha sido eliminado correctamente, false si no existe
-     * @throws BDException Gestion de exceptions
+     * Este metodo elimina un prestamo de la base de datos de la biblioteca
+     * @param isbn ISBN del libro del prestamo
+     * @param dni DNI del socio del prestamo
+     * @param fecha_inicio Fecha de inicio del prestamo
+     * @return Devuelve true si se ha eliminado correctamente, false si no existe el prestamo
+     * @throws BDException Gestion de excepciones de base de datos
      */
     public static boolean eliminarLibro(String isbn, String dni, String fecha_inicio) throws BDException {
         PreparedStatement ps;
@@ -259,11 +249,12 @@ public class AccesoPrestamo {
     }
 
     /**
-     *
-     * @param isbn Pide ISBN
-     * @param dni Pide DNI
-     * @param fecha_inicio Pide fecha inicio para dar de baja un prestamo
-     * @throws BDException Gestion de exceptions
+     * Este metodo actualiza un prestamo en la base de datos de la biblioteca estableciendo la fecha de devolucion
+     * @param isbn ISBN del libro del prestamo
+     * @param dni DNI del socio del prestamo
+     * @param fecha_inicio Fecha de inicio del prestamo
+     * @throws BDException Gestion de excepciones de base de datos
+     * @throws PrestamosException Gestion de excepciones de prestamos
      */
     public static void actualizarPrestamo(String isbn, String dni, String fecha_inicio) throws BDException, PrestamosException {
         Connection conexion = null;
@@ -301,4 +292,5 @@ public class AccesoPrestamo {
         }
 
     }
+
 }
