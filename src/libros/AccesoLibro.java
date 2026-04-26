@@ -73,7 +73,7 @@ public class AccesoLibro {
         try {
             conexion = ConfigMySql.abrirConexion();
 
-            String query1 = "SELECT * FROM prestamo WHERE codigo_libro = (SELECT codigo FROM libro WHERE isbn = ?)";
+            String query1 = "SELECT * FROM prestamo WHERE codigo_libro = (SELECT codigo FROM libro WHERE isbn = ?) AND fecha_devolucion IS NULL";
             ps = conexion.prepareStatement(query1);
             ps.setString(1, isbn);
             ResultSet rs = ps.executeQuery();
