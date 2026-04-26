@@ -231,7 +231,7 @@ public class Main {
                                     break;
                                 case 1:
                                     System.out.println("Insertando un préstamo en la base de datos...");
-                                    titulo = Teclado.leerCadena("Titulo: ");
+                                    titulo = Teclado.leerCadena("Busca el libro a insertar: ");
 
                                     libros = AccesoLibro.consultarPorTituloSinPrestar(titulo);
 
@@ -266,7 +266,7 @@ public class Main {
                                 case 3:
                                     System.out.println("Eliminando un préstamo, por datos identificativos, de la base de datos...");
 
-                                    titulo = Teclado.leerCadena("Titulo: ");
+                                    titulo = Teclado.leerCadena("Busca el libros no vueltos: ");
 
                                     libros = AccesoLibro.consultarPorTituloPrestadosYNoDevueltos(titulo);
 

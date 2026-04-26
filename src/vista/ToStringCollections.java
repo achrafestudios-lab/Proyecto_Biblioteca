@@ -28,7 +28,7 @@ public class ToStringCollections {
         StringBuilder cadena = new StringBuilder();
 
         for(Map.Entry<?, Object> entry : mapa.entrySet()) {
-            cadena.append("Fecha inicio [").append(entry.getKey()).append("]").append(": ").append(entry.getValue()).append("\n");
+            cadena.append("Fecha inicio [").append(entry.getValue()).append("]").append(": ").append(entry.getKey()).append("\n");
         }
         return cadena.toString();
     }

@@ -64,7 +64,7 @@ public class Menus {
         System.out.println(" 4. Consultar todos los préstamos de la base de datos.");
         System.out.println(" 5. Consultar los préstamos no devueltos de la base de datos.");
         System.out.println(" 6. Consultar DNI y nombre de socio, ISBN y título de libro y fecha de devolución de los\n" +
-                "préstamos realizados en una fecha de la base de datos.");
+                "préstamos realizados en la fecha inicio de la base de datos.");
 
         return Teclado.leerEntero("Elige una opción: ");
     }

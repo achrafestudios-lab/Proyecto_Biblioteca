@@ -73,7 +73,7 @@ public class LeerValidaciones {
         boolean validado;
 
         do {
-            fecha = Teclado.leerCadena("Fecha de devolucion: ");
+            fecha = Teclado.leerCadena("Fecha: ");
             validado = Validaciones.validarFecha(fecha);
 
             if (!validado) {

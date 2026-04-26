@@ -197,11 +197,12 @@ public class AccesoSocio {
                 int codigo = rs.getInt("codigo");
                 String isbn = rs.getString("isbn");
                 String titulo = rs.getString("titulo");
+                String escritor = rs.getString("escritor");
                 int anio_publicaccion = rs.getInt("anio_publicacion");
                 double puntuacion = rs.getDouble("puntuacion");
                 String fechaInicio = rs.getString("fecha_inicio");
 
-                Libro LibroAux = new Libro(codigo, isbn, titulo, fechaInicio, anio_publicaccion, puntuacion);
+                Libro LibroAux = new Libro(codigo, isbn, titulo, escritor, anio_publicaccion, puntuacion);
 
                 libros.put(LibroAux, fechaInicio);
             }
