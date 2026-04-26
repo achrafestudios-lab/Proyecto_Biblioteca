@@ -64,7 +64,7 @@ public class AccesoSocio {
         try {
             conexion = ConfigMySql.abrirConexion();
 
-            String query1 = "SELECT * FROM prestamo WHERE codigo_socio = (SELECT codigo FROM socio WHERE dni = ?)";
+            String query1 = "SELECT * FROM prestamo WHERE codigo_socio = (SELECT codigo FROM socio WHERE dni = ?) AND fecha_devuelto IS NULL";
             ps = conexion.prepareStatement(query1);
             ps.setString(1, dni);
             ResultSet rs = ps.executeQuery();
