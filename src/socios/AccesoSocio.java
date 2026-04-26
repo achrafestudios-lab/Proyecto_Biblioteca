@@ -235,7 +235,7 @@ public class AccesoSocio {
         try {
             conexion = ConfigMySql.abrirConexion();
 
-            String query = "SELECT * FROM socio WHERE codigo NOT IN (SELECT codigo_socio FROM prestamo)";
+            String query = "SELECT * FROM socio WHERE codigo NOT IN (SELECT codigo_socio FROM prestamo  WHERE fecha_devolucion IS NOT NULL)";
 
             ps = conexion.prepareStatement(query);
 
