@@ -112,10 +112,6 @@ public class AccesoPrestamo {
             ps.setString(1, fechaInicio);
             ResultSet rs = ps.executeQuery();
 
-            if(rs.isAfterLast()){
-                throw new PrestamosException(PrestamosException.PRESTAMOS_INEXISTENTE_POR_FECHA);
-            }
-
             while (rs.next()) {
                 String dni = rs.getString("dni");
                 String nombre = rs.getString("nombre");
@@ -124,6 +120,10 @@ public class AccesoPrestamo {
                 String fechaDevolucion = rs.getString("fecha_devolucion");
                 ConsultarPrestamosPorFechaInicio aux = new ConsultarPrestamosPorFechaInicio(dni, nombre, isbn, titulo, fechaDevolucion);
                 prestamos.add(aux);
+            }
+
+            if(prestamos.isEmpty()){
+                throw new PrestamosException(PrestamosException.PRESTAMOS_INEXISTENTE_POR_FECHA);
             }
         }catch (SQLException e) {
             throw new BDException(BDException.ERROR_QUERY + e.getMessage());

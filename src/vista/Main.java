@@ -266,7 +266,7 @@ public class Main {
                                 case 3:
                                     System.out.println("Eliminando un préstamo, por datos identificativos, de la base de datos...");
 
-                                    titulo = Teclado.leerCadena("Busca el libros no vueltos: ");
+                                    titulo = Teclado.leerCadena("Busca los libros con prestamos devueltos: ");
 
                                     libros = AccesoLibro.consultarPorTituloPrestadosYNoDevueltos(titulo);
 

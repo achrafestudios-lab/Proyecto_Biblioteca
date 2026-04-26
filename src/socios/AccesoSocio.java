@@ -64,7 +64,7 @@ public class AccesoSocio {
         try {
             conexion = ConfigMySql.abrirConexion();
 
-            String query1 = "SELECT * FROM prestamo WHERE codigo_socio = (SELECT codigo FROM socio WHERE dni = ?) AND fecha_devuelto IS NULL";
+            String query1 = "SELECT * FROM prestamo WHERE codigo_socio = (SELECT codigo FROM socio WHERE dni = ?) AND fecha_devolucion IS NULL";
             ps = conexion.prepareStatement(query1);
             ps.setString(1, dni);
             ResultSet rs = ps.executeQuery();
@@ -235,7 +235,7 @@ public class AccesoSocio {
         try {
             conexion = ConfigMySql.abrirConexion();
 
-            String query = "SELECT * FROM socio WHERE codigo NOT IN (SELECT codigo_socio FROM prestamo WHERE fecha_devolucion IS NOT NULL)";
+            String query = "SELECT * FROM socio WHERE codigo NOT IN (SELECT codigo_socio FROM prestamo WHERE fecha_devolucion IS NULL)";
 
             ps = conexion.prepareStatement(query);
 

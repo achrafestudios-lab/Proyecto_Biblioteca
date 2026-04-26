@@ -14,11 +14,11 @@ public class Validaciones {
     }
 
     public static boolean validarTelefono(String telefono){
-        return telefono.matches("^6[0-9]{8}$");
+        return telefono.matches("^[679][0-9]{8}$");
     }
 
     public static boolean validarNombre(String nombre){
-        return nombre.matches("^[a-zA-Z]\\w+$");
+        return nombre.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ][a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$");
     }
 
     public static boolean validarFecha(String fecha){
