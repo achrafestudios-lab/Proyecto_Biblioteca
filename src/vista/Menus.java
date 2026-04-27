@@ -13,6 +13,7 @@ public class Menus {
         System.out.println(" 1. Gestión de libros.");
         System.out.println(" 2. Gestión de socios.");
         System.out.println(" 3. Gestión de préstamos.");
+        System.out.println(" 4. Gestión de ampliacion.");
 
         return Teclado.leerEntero("Elige una opción: ");
     }
