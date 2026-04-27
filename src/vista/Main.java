@@ -5,6 +5,7 @@ import exception.BDException;
 import exception.PrestamosException;
 import exception.SociosException;
 import prestamos.AccesoPrestamo;
+import prestamos.Ampliacion;
 import prestamos.ConsultarPrestamosPorFechaInicio;
 import prestamos.Prestamo;
 import socios.AccesoSocio;
@@ -327,15 +328,18 @@ public class Main {
                                     break;
                                 case 1:
                                     System.out.println("Consultar el libro o los libros que ha/n sido prestado/s menos veces (y que como mínimo haya/n sido prestado/s una vez)...");
-
+                                    libros = Ampliacion.consultarLibrosMenosPrestados();
+                                    System.out.println(toStringList(libros));
                                     break;
                                 case 2:
                                     System.out.println("Consultar el socio o los socios que ha/n realizado más préstamos...");
-
+                                    socios = Ampliacion.consultarSociosConMasPrestamos();
+                                    System.out.println(toStringList(socios));
                                     break;
                                 case 3:
                                     System.out.println("Consultar los libros que han sido prestados (incluyendo los libros no devueltos) una cantidad de veces inferior a la media...");
-
+                                    libros = Ampliacion.consultarLibrosBajoLaMediaDePrestamos();
+                                    System.out.println(toStringList(libros));
                                     break;
                                 case 4:
                                     System.out.println("Consultar los socios que han realizado una cantidad de préstamos superior a la media...");
