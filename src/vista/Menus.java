@@ -68,4 +68,22 @@ public class Menus {
 
         return Teclado.leerEntero("Elige una opción: ");
     }
+
+    /**
+     * Menú de consultas estadísticas y ránkings
+     * @return Opción seleccionada por el usuario
+     */
+    public static int menuAmpliacion() {
+        System.out.println("===== MENÚ DE AMPLIACION =====");
+        System.out.println(" 0. Volver.");
+        System.out.println(" 1. Consultar el libro o los libros menos prestados (mínimo una vez).");
+        System.out.println(" 2. Consultar el socio o los socios que han realizado más préstamos.");
+        System.out.println(" 3. Consultar los libros prestados por debajo de la media.");
+        System.out.println(" 4. Consultar los socios con préstamos superiores a la media.");
+        System.out.println(" 5. Consultar ranking de libros más prestados.");
+        System.out.println(" 6. Consultar ranking de socios con más préstamos.");
+
+        return Teclado.leerEntero("Elige una opción: ");
+    }
+
 }
