@@ -314,6 +314,47 @@ public class Main {
                             }
                         } while (opPrestamo != 0);
                         break;
+
+                    case 4:
+                        int opAmpliacion;
+
+                        do {
+                            opAmpliacion = menuAmpliacion();
+
+                            switch (opAmpliacion) {
+                                case 0:
+                                    System.out.println("Saliendo del menu ampliacion...");
+                                    break;
+                                case 1:
+                                    System.out.println("Consultar el libro o los libros que ha/n sido prestado/s menos veces (y que como mínimo haya/n sido prestado/s una vez)...");
+
+                                    break;
+                                case 2:
+                                    System.out.println("Consultar el socio o los socios que ha/n realizado más préstamos...");
+
+                                    break;
+                                case 3:
+                                    System.out.println("Consultar los libros que han sido prestados (incluyendo los libros no devueltos) una cantidad de veces inferior a la media...");
+
+                                    break;
+                                case 4:
+                                    System.out.println("Consultar los socios que han realizado una cantidad de préstamos superior a la media...");
+
+                                    break;
+                                case 5:
+                                    System.out.println("Consultar el ISBN, el título y el número de veces de los libros que han sido prestados, ordenados por el número de préstamos descendente....");
+
+                                    break;
+                                case 6:
+                                    System.out.println("Consultar el DNI, el nombre y el número de veces de los socios que han realizado préstamos, ordenados por el número de préstamos descendente...");
+
+                                    break;
+                                default:
+                                    System.err.println("La opción de menú debe estar comprendida entre 0 y 6.");
+                            }
+                        } while (opAmpliacion != 0);
+                        break;
+
                     default:
                         System.err.println("La opción de menú debe estar comprendida entre 0 y 3.");
                 }
