@@ -55,7 +55,6 @@ public class Main {
                     case 0:
                         System.out.println("Saliendo del programa...");
                         break;
-
                     case 1:
                         int opLibro;
                         do {
@@ -63,7 +62,7 @@ public class Main {
 
                             switch (opLibro) {
                                 case 0:
-                                    System.out.println("Saliendo del programa...");
+                                    System.out.println("Saliendo del menu libro...");
                                     break;
                                 case 1:
                                     System.out.println("Insertando un libro en la base de datos...");
@@ -152,7 +151,7 @@ public class Main {
 
                             switch (opSocio) {
                                 case 0:
-                                    System.out.println("Saliendo del programa...");
+                                    System.out.println("Saliendo del menu socio...");
                                     break;
                                 case 1:
                                     System.out.println("Insertando un socio en la base de datos...");
@@ -227,7 +226,7 @@ public class Main {
 
                             switch (opPrestamo) {
                                 case 0:
-                                    System.out.println("Saliendo del programa...");
+                                    System.out.println("Saliendo del menu prestamo...");
                                     break;
                                 case 1:
                                     System.out.println("Insertando un préstamo en la base de datos...");
