@@ -67,15 +67,14 @@ public class Main {
                                 case 1:
                                     System.out.println("Insertando un libro en la base de datos...");
 
-                                    int codigoNuevo = Teclado.leerEntero("Codigo: ");
-
                                     isbn = leerISBNValidado();
                                     titulo = Teclado.leerCadena("Titulo: ");
                                     String escritor = Teclado.leerCadena("Escritor: ");
                                     anio = leerAnioValidado();
                                     puntuacion = leerPuntuacionValidada();
 
-                                    libro = new Libro(codigoNuevo, isbn, titulo, escritor, anio, puntuacion);
+                                    libro = new Libro(01
+                                            , isbn, titulo, escritor, anio, puntuacion);
 
                                     boolean insertado = AccesoLibro.insertarLibros(libro);
 

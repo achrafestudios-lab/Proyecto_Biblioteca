@@ -26,23 +26,21 @@ public class AccesoLibro {
         try {
             conexion = ConfigMySql.abrirConexion();
 
-            String sentenciaInsertarDept = "INSERT INTO libro(codigo, isbn, titulo, escritor, anio_publicacion, puntuacion) VALUES(?,?,?,?,?,?);";
+            String sentenciaInsertarDept = "INSERT INTO libro( isbn, titulo, escritor, anio_publicacion, puntuacion) VALUES(?,?,?,?,?);";
 
             PreparedStatement sentencia = conexion.prepareStatement(sentenciaInsertarDept);
 
-            int codigo = libro.getCodigo();
             String isbn = libro.getIsbn();
             String titulo = libro.getTitulo();
             String escritor = libro.getEscritor();
             int anio_publicaccion = libro.getAnioPublicacion();
             double puntuacion = libro.getPuntuacion();
 
-            sentencia.setInt(1, codigo);
-            sentencia.setString(2, isbn);
-            sentencia.setString(3, titulo);
-            sentencia.setString(4, escritor);
-            sentencia.setInt(5, anio_publicaccion);
-            sentencia.setDouble(6, puntuacion);
+            sentencia.setString(1, isbn);
+            sentencia.setString(2, titulo);
+            sentencia.setString(3, escritor);
+            sentencia.setInt(4, anio_publicaccion);
+            sentencia.setDouble(5, puntuacion);
 
             columnasInsertadas = sentencia.executeUpdate();
 
