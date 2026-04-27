@@ -1,23 +1,8 @@
 package prestamos;
 
 import config.ConfigMySql;
-import exception.BDException;
-import libros.Libro;
-import socios.Socio;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
-import config.ConfigMySql;
 import exception.AmpliacionException;
 import exception.BDException;
-import exception.PrestamosException;
-import exception.SociosException;
 import libros.Libro;
 import socios.Socio;
 
@@ -28,10 +13,7 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-import static prestamos.AccesoPrestamo.prestamos;
-
 public class Ampliacion {
-
     public static List<Libro> consultarLibrosMenosPrestados (){
         Connection conexion = null;
         PreparedStatement ps = null;
@@ -185,7 +167,7 @@ public class Ampliacion {
             ps = conexion.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
 
-            crearLibro(libros, rs);
+            extraerRankingSocios(libros, rs);
 
             if (libros.isEmpty()) {
                 throw new AmpliacionException(AmpliacionException.LISTA_LIBROS_VACIA_EXCEPTION);
@@ -221,7 +203,7 @@ public class Ampliacion {
 
             ResultSet rs = ps.executeQuery();
 
-            crearSocio(socios, rs);
+            extraerRankingSocios(socios, rs);
 
             if (socios.isEmpty()) {
                 throw new AmpliacionException(AmpliacionException.LISTA_SOCIOS_VACIA_EXCEPTION);
@@ -239,8 +221,6 @@ public class Ampliacion {
         }
 
         return socios;
-    }
-
     }
 
     /**
@@ -284,27 +264,6 @@ public class Ampliacion {
             Socio socioAux = new Socio(codigo, dni, nombre, domicilio, telefono, correo);
             socios.add(socioAux);
         }
-    private static void crearSocio(List<String> socios, ResultSet rs) throws SQLException {
-        while (rs.next()) {
-            String dni = rs.getString("dni_socio");
-            String nombre = rs.getString("nombre_socio");
-            int num_prestamos = rs.getInt("total");
-
-            String cadena = "Socio [DNI: " + dni + ", Nombre: " + nombre + ", Prestamos: " + num_prestamos + "]";
-            socios.add(cadena);
-        }
-    }
-
-    private static void crearLibro(List<String> libros, ResultSet rs) throws SQLException {
-        while (rs.next()) {
-            // Usamos los alias definidos en la consulta para evitar errores
-            String isbn = rs.getString("isbn_libro");
-            String titulo = rs.getString("titulo_libro");
-            int total = rs.getInt("total");
-
-            String cadena = "Libro [ISBN: " + isbn + ", Título: " + titulo + ", Veces prestado: " + total + "]";
-            libros.add(cadena);
-        }
     }
 
     private static void extraerRankingSocios(List<String> socios, ResultSet rs) throws SQLException {
@@ -317,4 +276,5 @@ public class Ampliacion {
             socios.add(cadena);
         }
     }
+
 }
