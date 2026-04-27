@@ -16,6 +16,7 @@ import exception.LibroException;
 import libros.AccesoLibro;
 import libros.Libro;
 
+import static prestamos.Ampliacion.*;
 import static vista.LeerValidaciones.*;
 import static vista.Menus.*;
 import static vista.ToStringCollections.*;
@@ -37,6 +38,7 @@ public class Main {
         int anio;
         double puntuacion;
 
+        List<String> listaStrings;
         List<Socio> socios;
         Map<?, Object> mapa;
         List<Prestamo> prestamos;
@@ -343,15 +345,21 @@ public class Main {
                                     break;
                                 case 4:
                                     System.out.println("Consultar los socios que han realizado una cantidad de préstamos superior a la media...");
+                                    listaStrings = consultarSociosSobreLaMediaDePrestamos();
 
+                                    System.out.println(toStringList(listaStrings));
                                     break;
                                 case 5:
                                     System.out.println("Consultar el ISBN, el título y el número de veces de los libros que han sido prestados, ordenados por el número de préstamos descendente....");
+                                    listaStrings = consultarRankingLibrosPrestados();
 
+                                    System.out.println(toStringList(listaStrings));
                                     break;
                                 case 6:
                                     System.out.println("Consultar el DNI, el nombre y el número de veces de los socios que han realizado préstamos, ordenados por el número de préstamos descendente...");
+                                    listaStrings = consultarRankingSociosPorPrestamos();
 
+                                    System.out.println(toStringList(listaStrings));
                                     break;
                                 default:
                                     System.err.println("La opción de menú debe estar comprendida entre 0 y 6.");
