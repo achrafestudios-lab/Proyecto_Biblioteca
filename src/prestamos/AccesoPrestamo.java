@@ -212,7 +212,6 @@ public class AccesoPrestamo {
                 throw new PrestamosException(PrestamosException.ERROR_LIBRO_NO_INSERTADO);
             }
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
             throw new BDException(BDException.ERROR_QUERY + e.getMessage());
         } finally {
             if (conexion != null) {
@@ -250,7 +249,6 @@ public class AccesoPrestamo {
                 return false;
             }
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
             throw new BDException(BDException.ERROR_QUERY + e.getMessage());
         } finally {
             if (conexion != null) {
@@ -295,7 +293,6 @@ public class AccesoPrestamo {
                 throw new PrestamosException(PrestamosException.ERROR_NO_SE_PUDO_ACTUALIZAR_PRESTAMO);
             }
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
             throw new BDException(BDException.ERROR_QUERY + e.getMessage());
         } finally {
             if (conexion != null) {
