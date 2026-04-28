@@ -2,7 +2,10 @@ package prestamos;
 
 import config.ConfigMySql;
 import exception.BDException;
+import exception.LibroException;
 import exception.PrestamosException;
+import exception.SociosException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -79,7 +82,7 @@ public class AccesoPrestamo {
         ResultSet rs = ps.executeQuery();
 
         while (rs.next()) {
-            int codigoLibro = rs.getInt("codigo_Libro");
+            int codigoLibro = rs.getInt("codigo_libro");
             int codigoSocio = rs.getInt("codigo_socio");
             String fechaInicio = rs.getString("fecha_inicio");
             String fechaFin = rs.getString("fecha_fin");
@@ -145,7 +148,7 @@ public class AccesoPrestamo {
      * @throws BDException Gestion de excepciones de base de datos
      * @throws PrestamosException Gestion de excepciones de préstamos
      */
-    public static void insertarPrestamo(String isbn, String dni) throws BDException, PrestamosException {
+    public static void insertarPrestamo(String isbn, String dni) throws BDException, PrestamosException, SociosException, LibroException {
         Connection conexion = null;
         LocalDate fechaInicio = LocalDate.now();
         LocalDate fechaFin = fechaInicio.plusDays(30);
@@ -154,32 +157,52 @@ public class AccesoPrestamo {
 
         try {
             conexion = ConfigMySql.abrirConexion();
-            String query = "SELECT s.dni FROM prestamo p" +
-                    " JOIN socio s ON (p.codigo_socio = s.codigo)" +
-                    " WHERE p.codigo_libro = (SELECT codigo FROM libro WHERE isbn = ?)" +
-                    " AND p.fecha_devolucion IS null";
-            PreparedStatement sentencia1 = conexion.prepareStatement(query);
-            sentencia1.setString(1, isbn);
-            ResultSet rs = sentencia1.executeQuery();
 
-            if (rs.next()) {
-                String dniConsulta = rs.getString("dni");
-                if(!dniConsulta.equalsIgnoreCase(dni)){
-                    throw new PrestamosException(PrestamosException.ERROR_LIBRO_PRESTADO_A_OTRO_USUARIO);
-                } else {
+            String query1 = "SELECT * FROM socio WHERE dni = ?";
+            PreparedStatement ps = conexion.prepareStatement(query1);
+            ps.setString(1, dni);
+
+            ResultSet rsSocio = ps.executeQuery();
+
+            if(!rsSocio.next()){
+                throw new SociosException(SociosException.SOCIO_INEXISTENTE);
+            }
+
+            String codigoSocio = rsSocio.getString("codigo");
+
+            String query2 = "SELECT * FROM libro WHERE isbn = ?";
+            ps = conexion.prepareStatement(query2);
+            ps.setString(1, isbn);
+
+            ResultSet rsLibro = ps.executeQuery();
+
+            if(!rsLibro.next()){
+                throw new LibroException(LibroException.ERROR_NO_EXISTE_EL_LIBRO);
+            }
+
+            String codigoLibro = rsLibro.getString("codigo");
+
+            String queryDispo = "SELECT codigo_socio FROM prestamo WHERE codigo_libro = ? AND fecha_devolucion IS NULL";
+            PreparedStatement psDispo = conexion.prepareStatement(queryDispo);
+            psDispo.setString(1, codigoLibro);
+            ResultSet rsDispo = psDispo.executeQuery();
+
+            if (rsDispo.next()) {
+                String socioActual = rsDispo.getString("codigo_socio");
+
+                if(socioActual.equals(codigoSocio)){
                     throw new PrestamosException(PrestamosException.ERROR_LIBRO_PRESTADO_A_ESE_USUARIO);
+                } else {
+                    throw new PrestamosException(PrestamosException.ERROR_LIBRO_PRESTADO_A_OTRO_USUARIO);
                 }
             }
 
             String sentenciaInsertarDept = "INSERT INTO prestamo (codigo_libro, codigo_socio, fecha_inicio, fecha_fin, fecha_devolucion) " +
-                    "VALUES (" +
-                    "(SELECT codigo FROM libro WHERE isbn = ?)," +
-                    "(SELECT codigo FROM socio WHERE dni = ?)," +
-                    "?, ?, NULL)";
+                    " VALUES (?, ?, ?, ?, NULL)";
             PreparedStatement sentencia = conexion.prepareStatement(sentenciaInsertarDept);
 
-            sentencia.setString(1, isbn);
-            sentencia.setString(2, dni);
+            sentencia.setString(1, codigoLibro);
+            sentencia.setString(2, codigoSocio);
             sentencia.setString(3, fecha);
             sentencia.setString(4, fechaF);
 
@@ -206,7 +229,7 @@ public class AccesoPrestamo {
      * @return Devuelve true si se ha eliminado correctamente, false si no existe el prestamo
      * @throws BDException Gestion de excepciones de base de datos
      */
-    public static boolean eliminarLibro(String isbn, String dni, String fecha_inicio) throws BDException {
+    public static boolean eliminarPrestamo(String isbn, String dni, String fecha_inicio) throws BDException {
         PreparedStatement ps;
         Connection conexion = null;
 

@@ -57,7 +57,7 @@ public class AccesoSocio {
      * @param dni DNI del socio a eliminar
      * @throws SociosException Gestion de excepciones de socios
      */
-    public static void eliminarSocio(String dni) throws SociosException {
+    public static void eliminarSocio(String dni) throws BDException, SociosException {
         Connection conexion = null;
         PreparedStatement ps;
 

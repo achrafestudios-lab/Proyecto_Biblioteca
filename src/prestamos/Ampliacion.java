@@ -91,7 +91,7 @@ public class Ampliacion {
             String query = "SELECT l.*, COUNT(*) AS contador FROM prestamo p" +
                     " JOIN libro l ON (p.codigo_libro = l.codigo)" +
                     " GROUP BY p.codigo_libro" +
-                    " HAVING contador < (SELECT AVG(conteo) FROM (SELECT COUNT(*) AS conteo FROM prestamo GROUP BY codigo_socio) AS sub)" +
+                    " HAVING contador < (SELECT AVG(conteo) FROM (SELECT COUNT(*) AS conteo FROM prestamo GROUP BY codigo_libro) AS sub)" +
                     " ORDER BY contador ASC";
             ps=conexion.prepareStatement(query);
             ResultSet rs = ps.executeQuery();

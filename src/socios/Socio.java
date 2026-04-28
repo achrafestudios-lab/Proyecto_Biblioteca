@@ -36,9 +36,4 @@ public class Socio {
     public void setTelefono(String telefono) {this.telefono = telefono;}
     public String getCorreo() {return correo;}
     public void setCorreo(String correo) {this.correo = correo;}
-
-    public static void main(String[] args) {
-        Socio socio = new Socio(1, "12345678A", "Juan Pérez", "Calle Mayor 1", "600123456", "juan@email.com");
-        System.out.println(socio);
-    }
 }

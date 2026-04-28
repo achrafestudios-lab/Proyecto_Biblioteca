@@ -276,7 +276,7 @@ public class Main {
 
                                     String fecha_ini = Teclado.leerCadena("Fecha inicio del prestamo: ");
 
-                                    boolean eliminado = AccesoPrestamo.eliminarLibro(isbn, dni, fecha_ini);
+                                    boolean eliminado = AccesoPrestamo.eliminarPrestamo(isbn, dni, fecha_ini);
 
                                     if (eliminado) {
                                         System.out.println("Prestamo eliminado correctamente.");

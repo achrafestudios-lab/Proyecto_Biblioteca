@@ -36,10 +36,4 @@ public class Libro {
     public void setAnioPublicacion(int anioPublicacion) {this.anioPublicacion = anioPublicacion;}
     public double getPuntuacion() {return puntuacion;}
     public void setPuntuacion(double puntuacion) {this.puntuacion = puntuacion;}
-
-    public static void main(String[] args) {
-        Libro libro = new Libro(1, "2220123456789", "The Hobbit", "J.R.R. Tolkien", 1937, 6.5);
-        System.out.println(libro);
-    }
-
 }
