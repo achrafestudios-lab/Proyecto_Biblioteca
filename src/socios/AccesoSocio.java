@@ -107,7 +107,7 @@ public class AccesoSocio {
      * @return Devuelve una lista con todos los socios
      * @throws SociosException Gestion de excepciones de socios
      */
-    public static List<Socio> consultarSocios() throws SociosException {
+    public static List<Socio> consultarSocios() throws BDException, SociosException {
         List<Socio> socios = new LinkedList<>();
         Connection conexion = null;
         PreparedStatement ps;

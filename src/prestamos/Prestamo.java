@@ -36,10 +36,4 @@ public class Prestamo {
     public void setFechaFin(String fechaFin) {this.fechaFin = fechaFin;}
     public String getFechaDevolucion() {return fechaDevolucion;}
     public void setFechaDevolucion(String fechaDevolucion) {this.fechaDevolucion = fechaDevolucion;}
-
-    public static void main(String[] args) {
-        Prestamo p = new Prestamo(2, 1, "10/01/2022", "24/01/2022", "21/01/2022");
-        System.out.println(p);
-    }
-
 }

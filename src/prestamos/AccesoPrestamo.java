@@ -168,7 +168,7 @@ public class AccesoPrestamo {
                 throw new SociosException(SociosException.SOCIO_INEXISTENTE);
             }
 
-            String codigoSocio = rsSocio.getString("codigo");
+            int codigoSocio = rsSocio.getInt("codigo");
 
             String query2 = "SELECT * FROM libro WHERE isbn = ?";
             ps = conexion.prepareStatement(query2);
@@ -180,11 +180,11 @@ public class AccesoPrestamo {
                 throw new LibroException(LibroException.ERROR_NO_EXISTE_EL_LIBRO);
             }
 
-            String codigoLibro = rsLibro.getString("codigo");
+            int codigoLibro = rsLibro.getInt("codigo");
 
             String queryDispo = "SELECT codigo_socio FROM prestamo WHERE codigo_libro = ? AND fecha_devolucion IS NULL";
             PreparedStatement psDispo = conexion.prepareStatement(queryDispo);
-            psDispo.setString(1, codigoLibro);
+            psDispo.setInt(1, codigoLibro);
             ResultSet rsDispo = psDispo.executeQuery();
 
             if (rsDispo.next()) {
@@ -201,8 +201,8 @@ public class AccesoPrestamo {
                     " VALUES (?, ?, ?, ?, NULL)";
             PreparedStatement sentencia = conexion.prepareStatement(sentenciaInsertarDept);
 
-            sentencia.setString(1, codigoLibro);
-            sentencia.setString(2, codigoSocio);
+            sentencia.setInt(1, codigoLibro);
+            sentencia.setInt(2, codigoSocio);
             sentencia.setString(3, fecha);
             sentencia.setString(4, fechaF);
 
