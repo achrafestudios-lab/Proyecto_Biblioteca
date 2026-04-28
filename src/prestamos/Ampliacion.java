@@ -14,19 +14,19 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Ampliacion {
-    public static List<Libro> consultarLibrosMenosPrestados () throws AmpliacionException {
+    public static List<String> consultarLibrosMenosPrestados () throws AmpliacionException {
         Connection conexion = null;
         PreparedStatement ps = null;
-        List<Libro> libros = new LinkedList<>();
+        List<String> libros = new LinkedList<>();
 
         try{
             conexion = ConfigMySql.abrirConexion();
 
-            String query = "SELECT l.* " +
+            String query = "SELECT l.*, COUNT(*) AS contador" +
                     " FROM prestamo p " +
                     " JOIN libro l ON p.codigo_libro = l.codigo " +
-                    " GROUP BY l.codigo, l.isbn, l.titulo, l.escritor, l.anio_publicacion, l.puntuacion " +
-                    " HAVING COUNT(*) = (SELECT MIN(COUNT(*)) FROM prestamo GROUP BY codigo_libro)";
+                    " GROUP BY l.codigo" +
+                    " HAVING COUNT(*) = (SELECT COUNT(codigo_libro) FROM prestamo GROUP BY codigo_libro ORDER BY COUNT(codigo_libro) ASC LIMIT 1)";
             ps = conexion.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
 
@@ -48,17 +48,18 @@ public class Ampliacion {
         return libros;
     }
 
-    public static List<Socio> consultarSociosConMasPrestamos () throws AmpliacionException {
+    public static List<String> consultarSociosConMasPrestamos () throws AmpliacionException {
         Connection conexion = null;
-        PreparedStatement ps = null;
-        List<Socio> socios = new LinkedList<>();
+        PreparedStatement ps;
+        List<String> socios = new LinkedList<>();
 
         try {
             conexion = ConfigMySql.abrirConexion();
 
-            String query = "SELECT s.* FROM prestamo" +
+            String query = "SELECT s.*, COUNT(*) AS contador FROM prestamo p" +
                     " JOIN socio s ON (p.codigo_socio = s.codigo)" +
-                    " WHERE p.codigo_socio IN (SELECT * FROM prestamo GROUP BY codigo_socio HAVING MAX(COUNT(*)))";
+                    " GROUP BY s.codigo" +
+                    " HAVING COUNT(*) = (SELECT COUNT(codigo_socio) FROM prestamo GROUP BY codigo_socio ORDER BY COUNT(codigo_socio) DESC LIMIT 1)";
             ps = conexion.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
 
@@ -80,17 +81,18 @@ public class Ampliacion {
         return socios;
     }
 
-    public static List<Libro> consultarLibrosBajoLaMediaDePrestamos () throws AmpliacionException {
+    public static List<String> consultarLibrosBajoLaMediaDePrestamos () throws AmpliacionException {
         Connection conexion = null;
         PreparedStatement ps = null;
-        List<Libro> libros = new LinkedList<>();
+        List<String> libros = new LinkedList<>();
         try {
             conexion = ConfigMySql.abrirConexion();
 
-            String query = "SELECT l.* FROM prestamo p" +
+            String query = "SELECT l.*, COUNT(*) AS contador FROM prestamo p" +
                     " JOIN libro l ON (p.codigo_libro = l.codigo)" +
                     " GROUP BY p.codigo_libro" +
-                    " HAVING COUNT(*) < (SELECT AVG(C))";
+                    " HAVING contador < (SELECT AVG(conteo) FROM (SELECT COUNT(*) AS conteo FROM prestamo GROUP BY codigo_socio) AS sub)" +
+                    " ORDER BY contador ASC";
             ps=conexion.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
 
@@ -224,7 +226,7 @@ public class Ampliacion {
      * @param resultados ResultSet con los datos de la consulta
      * @throws SQLException Gestion de excepciones
      */
-    private static void crearLibro(List<Libro> librosAux, ResultSet resultados) throws SQLException {
+    private static void crearLibro(List<String> librosAux, ResultSet resultados) throws SQLException {
         while (resultados.next()) {
             int codigo = resultados.getInt("codigo");
             String isbn = resultados.getString("isbn");
@@ -232,11 +234,13 @@ public class Ampliacion {
             String escritor = resultados.getString("escritor");
             int anio_publicaccion = resultados.getInt("anio_publicacion");
             double puntuacion = resultados.getDouble("puntuacion");
+            int contador = resultados.getInt("contador");
 
             Libro LibroAux = new Libro(codigo, isbn, titulo, escritor, anio_publicaccion, puntuacion);
 
-            librosAux.add(LibroAux);
+            String cadena = "[" + "Veces prestado: " + contador + ", " + LibroAux + "]";
 
+            librosAux.add(cadena);
         }
     }
 
@@ -246,7 +250,7 @@ public class Ampliacion {
      * @param rs datos de la consulta
      * @throws SQLException Gestion de excepciones
      */
-    private static void crearSocio(List<Socio> socios, ResultSet rs) throws SQLException {
+    private static void crearSocio(List<String> socios, ResultSet rs) throws SQLException {
         while (rs.next()) {
             int codigo = rs.getInt("codigo");
             String dni = rs.getString("dni");
@@ -254,9 +258,13 @@ public class Ampliacion {
             String domicilio = rs.getString("domicilio");
             String telefono = rs.getString("telefono");
             String correo = rs.getString("correo");
+            int contador = rs.getInt("contador");
 
             Socio socioAux = new Socio(codigo, dni, nombre, domicilio, telefono, correo);
-            socios.add(socioAux);
+
+            String cadena = "[" + "Veces prestado: " + contador + ", " + socioAux + "]";
+
+            socios.add(cadena);
         }
     }
 

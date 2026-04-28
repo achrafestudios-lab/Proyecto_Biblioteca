@@ -74,8 +74,7 @@ public class Main {
                                     anio = leerAnioValidado();
                                     puntuacion = leerPuntuacionValidada();
 
-                                    libro = new Libro(01
-                                            , isbn, titulo, escritor, anio, puntuacion);
+                                    libro = new Libro(0, isbn, titulo, escritor, anio, puntuacion);
 
                                     boolean insertado = AccesoLibro.insertarLibros(libro);
 
@@ -328,18 +327,18 @@ public class Main {
                                     break;
                                 case 1:
                                     System.out.println("Consultar el libro o los libros que ha/n sido prestado/s menos veces (y que como mínimo haya/n sido prestado/s una vez)...");
-                                    libros = Ampliacion.consultarLibrosMenosPrestados();
-                                    System.out.println(toStringList(libros));
+                                    listaStrings = Ampliacion.consultarLibrosMenosPrestados();
+                                    System.out.println(toStringList(listaStrings));
                                     break;
                                 case 2:
                                     System.out.println("Consultar el socio o los socios que ha/n realizado más préstamos...");
-                                    socios = Ampliacion.consultarSociosConMasPrestamos();
-                                    System.out.println(toStringList(socios));
+                                    listaStrings = Ampliacion.consultarSociosConMasPrestamos();
+                                    System.out.println(toStringList(listaStrings));
                                     break;
                                 case 3:
                                     System.out.println("Consultar los libros que han sido prestados (incluyendo los libros no devueltos) una cantidad de veces inferior a la media...");
-                                    libros = Ampliacion.consultarLibrosBajoLaMediaDePrestamos();
-                                    System.out.println(toStringList(libros));
+                                    listaStrings = Ampliacion.consultarLibrosBajoLaMediaDePrestamos();
+                                    System.out.println(toStringList(listaStrings));
                                     break;
                                 case 4:
                                     System.out.println("Consultar los socios que han realizado una cantidad de préstamos superior a la media...");
