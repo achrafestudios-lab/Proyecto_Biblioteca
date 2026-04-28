@@ -1,9 +1,7 @@
 package vista;
 
 import entrada.Teclado;
-import exception.BDException;
-import exception.PrestamosException;
-import exception.SociosException;
+import exception.*;
 import prestamos.AccesoPrestamo;
 import prestamos.Ampliacion;
 import prestamos.ConsultarPrestamosPorFechaInicio;
@@ -12,7 +10,7 @@ import socios.AccesoSocio;
 import socios.Socio;
 import java.util.List;
 import java.util.Map;
-import exception.LibroException;
+
 import libros.AccesoLibro;
 import libros.Libro;
 
@@ -370,7 +368,7 @@ public class Main {
                     default:
                         System.err.println("La opción de menú debe estar comprendida entre 0 y 4.");
                 }
-            } catch (BDException | SociosException | PrestamosException | LibroException e) {
+            } catch (BDException | SociosException | PrestamosException | LibroException | AmpliacionException e) {
                 System.err.println(e.getMessage());
             }
         } while (opcion != 0);

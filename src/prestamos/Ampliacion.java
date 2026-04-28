@@ -267,7 +267,7 @@ public class Ampliacion {
             String nombre = rs.getString("nombre_socio");
             int total = rs.getInt("total");
 
-            String cadena = "Socio [DNI: " + dni + ", Nombre: " + nombre + ", Préstamos: " + total + "]";
+            String cadena = "Socio [DNI: " + dni + ", Nombre: " + nombre + ", Numero prestamos: " + total + "]";
             socios.add(cadena);
         }
     }
@@ -290,7 +290,7 @@ public class Ampliacion {
             String nombre = rs.getString("nombre_socio");
             int num_prestamos = rs.getInt("total");
 
-            String cadena = "Socio [DNI: " + dni + ", Nombre: " + nombre + ", Prestamos: " + num_prestamos + "]";
+            String cadena = "Socio [DNI: " + dni + ", Nombre: " + nombre + ", Numero prestamos: " + num_prestamos + "]";
             socios.add(cadena);
         }
     }
