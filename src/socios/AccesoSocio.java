@@ -28,9 +28,9 @@ public class AccesoSocio {
             String queryCheck = "SELECT 1 FROM socio WHERE dni = ?";
             PreparedStatement psCheck = conexion.prepareStatement(queryCheck);
             psCheck.setString(1, socio.getDni());
-            ResultSet rsLibro = psCheck.executeQuery();
+            ResultSet rsSocio = psCheck.executeQuery();
 
-            if (rsLibro.next()) {
+            if (rsSocio.next()) {
                 throw new SociosException(SociosException.SOCIO_EXISTENTE);
             }
 

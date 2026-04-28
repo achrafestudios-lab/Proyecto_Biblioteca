@@ -14,7 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Ampliacion {
-    public static List<String> consultarLibrosMenosPrestados () throws AmpliacionException {
+    public static List<String> consultarLibrosMenosPrestados () throws AmpliacionException, BDException {
         Connection conexion = null;
         PreparedStatement ps = null;
         List<String> libros = new LinkedList<>();
@@ -48,7 +48,7 @@ public class Ampliacion {
         return libros;
     }
 
-    public static List<String> consultarSociosConMasPrestamos () throws AmpliacionException {
+    public static List<String> consultarSociosConMasPrestamos () throws AmpliacionException, BDException {
         Connection conexion = null;
         PreparedStatement ps;
         List<String> socios = new LinkedList<>();
@@ -81,7 +81,7 @@ public class Ampliacion {
         return socios;
     }
 
-    public static List<String> consultarLibrosBajoLaMediaDePrestamos () throws AmpliacionException {
+    public static List<String> consultarLibrosBajoLaMediaDePrestamos () throws AmpliacionException, BDException {
         Connection conexion = null;
         PreparedStatement ps = null;
         List<String> libros = new LinkedList<>();
@@ -114,7 +114,7 @@ public class Ampliacion {
         return libros;
     }
 
-    public static List<String> consultarSociosSobreLaMediaDePrestamos () throws AmpliacionException {
+    public static List<String> consultarSociosSobreLaMediaDePrestamos () throws AmpliacionException, BDException {
         List<String> socios = new LinkedList<>();
         Connection conexion = null;
         PreparedStatement ps;
@@ -150,7 +150,7 @@ public class Ampliacion {
         return socios;
     }
 
-    public static List <String> consultarRankingLibrosPrestados () throws AmpliacionException {
+    public static List <String> consultarRankingLibrosPrestados () throws AmpliacionException, BDException {
         List<String> libros = new LinkedList<>();
         Connection conexion = null;
         PreparedStatement ps;
@@ -183,7 +183,7 @@ public class Ampliacion {
         return libros;
     }
 
-    public static List <String> consultarRankingSociosPorPrestamos() throws AmpliacionException {
+    public static List <String> consultarRankingSociosPorPrestamos() throws AmpliacionException, BDException {
         List<String> socios = new LinkedList<>();
         Connection conexion = null;
         PreparedStatement ps;
@@ -219,6 +219,7 @@ public class Ampliacion {
         return socios;
     }
 
+
     /**
      * Este metodo crea objetos Libro a partir de un ResultSet y los agrega a una lista
      *
@@ -232,11 +233,11 @@ public class Ampliacion {
             String isbn = resultados.getString("isbn");
             String titulo = resultados.getString("titulo");
             String escritor = resultados.getString("escritor");
-            int anio_publicaccion = resultados.getInt("anio_publicacion");
+            int anio_publicacion = resultados.getInt("anio_publicacion");
             double puntuacion = resultados.getDouble("puntuacion");
             int contador = resultados.getInt("contador");
 
-            Libro LibroAux = new Libro(codigo, isbn, titulo, escritor, anio_publicaccion, puntuacion);
+            Libro LibroAux = new Libro(codigo, isbn, titulo, escritor, anio_publicacion, puntuacion);
 
             String cadena = "[" + "Veces prestado: " + contador + ", " + LibroAux + "]";
 
