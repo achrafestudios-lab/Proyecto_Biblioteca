@@ -57,7 +57,7 @@ public class LeerValidaciones {
             validado = Validaciones.validarPuntuacion(puntuacion);
 
             if (!validado) {
-                System.err.println("La puntuacion debe estar entre 0 y 10.");
+                System.err.println("La puntuacion debe estar entre 0 y 10. Y como maximo puede tener 1 decimal.");
             }
         } while (!validado);
 
