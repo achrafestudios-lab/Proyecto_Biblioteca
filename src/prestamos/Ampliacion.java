@@ -14,7 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Ampliacion {
-    public static List<Libro> consultarLibrosMenosPrestados (){
+    public static List<Libro> consultarLibrosMenosPrestados () throws AmpliacionException {
         Connection conexion = null;
         PreparedStatement ps = null;
         List<Libro> libros = new LinkedList<>();
@@ -33,7 +33,7 @@ public class Ampliacion {
             crearLibro(libros, rs);
 
             if(libros.isEmpty()){
-
+                throw new AmpliacionException(AmpliacionException.LISTA_LIBROS_VACIA_EXCEPTION);
             }
         }catch (SQLException e) {
             throw new BDException(BDException.ERROR_QUERY + e.getMessage());
@@ -48,7 +48,7 @@ public class Ampliacion {
         return libros;
     }
 
-    public static List<Socio> consultarSociosConMasPrestamos (){
+    public static List<Socio> consultarSociosConMasPrestamos () throws AmpliacionException {
         Connection conexion = null;
         PreparedStatement ps = null;
         List<Socio> socios = new LinkedList<>();
@@ -65,7 +65,7 @@ public class Ampliacion {
             crearSocio(socios, rs);
 
             if(socios.isEmpty()){
-
+                throw new AmpliacionException(AmpliacionException.LISTA_SOCIOS_VACIA_EXCEPTION);
             }
         }catch (SQLException e) {
             throw new BDException(BDException.ERROR_QUERY + e.getMessage());
@@ -80,7 +80,7 @@ public class Ampliacion {
         return socios;
     }
 
-    public static List<Libro> consultarLibrosBajoLaMediaDePrestamos (){
+    public static List<Libro> consultarLibrosBajoLaMediaDePrestamos () throws AmpliacionException {
         Connection conexion = null;
         PreparedStatement ps = null;
         List<Libro> libros = new LinkedList<>();
@@ -97,7 +97,7 @@ public class Ampliacion {
             crearLibro(libros, rs);
 
             if(libros.isEmpty()){
-
+                throw new AmpliacionException(AmpliacionException.LISTA_LIBROS_VACIA_EXCEPTION);
             }
         }catch (SQLException e) {
             throw new BDException(BDException.ERROR_QUERY + e.getMessage());
@@ -112,7 +112,7 @@ public class Ampliacion {
         return libros;
     }
 
-    public static List<String> consultarSociosSobreLaMediaDePrestamos (){
+    public static List<String> consultarSociosSobreLaMediaDePrestamos () throws AmpliacionException {
         List<String> socios = new LinkedList<>();
         Connection conexion = null;
         PreparedStatement ps;
@@ -139,8 +139,6 @@ public class Ampliacion {
 
         } catch (SQLException e) {
             throw new BDException(BDException.ERROR_QUERY + e.getMessage());
-        } catch (AmpliacionException e) {
-            throw new RuntimeException(e);
         } finally {
             if (conexion != null) {
                 ConfigMySql.cerrarConexion(conexion);
@@ -150,7 +148,7 @@ public class Ampliacion {
         return socios;
     }
 
-    public static List <String> consultarRankingLibrosPrestados (){
+    public static List <String> consultarRankingLibrosPrestados () throws AmpliacionException {
         List<String> libros = new LinkedList<>();
         Connection conexion = null;
         PreparedStatement ps;
@@ -167,15 +165,13 @@ public class Ampliacion {
             ps = conexion.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
 
-            extraerRankingSocios(libros, rs);
+            crearLibro2(libros, rs);
 
             if (libros.isEmpty()) {
                 throw new AmpliacionException(AmpliacionException.LISTA_LIBROS_VACIA_EXCEPTION);
             }
         } catch (SQLException e) {
             throw new BDException(BDException.ERROR_QUERY + e.getMessage());
-        } catch (AmpliacionException e) {
-            throw new RuntimeException(e);
         } finally {
             if (conexion != null) {
                 ConfigMySql.cerrarConexion(conexion);
@@ -185,7 +181,7 @@ public class Ampliacion {
         return libros;
     }
 
-    public static List <String> consultarRankingSociosPorPrestamos(){
+    public static List <String> consultarRankingSociosPorPrestamos() throws AmpliacionException {
         List<String> socios = new LinkedList<>();
         Connection conexion = null;
         PreparedStatement ps;
@@ -203,7 +199,7 @@ public class Ampliacion {
 
             ResultSet rs = ps.executeQuery();
 
-            extraerRankingSocios(socios, rs);
+            crearSocio2(socios, rs);
 
             if (socios.isEmpty()) {
                 throw new AmpliacionException(AmpliacionException.LISTA_SOCIOS_VACIA_EXCEPTION);
@@ -212,8 +208,6 @@ public class Ampliacion {
             throw new BDException(BDException.ERROR_QUERY + e.getMessage());
         } catch (BDException e) {
             throw new BDException(BDException.ERROR_ABRIR_CONEXION + e.getMessage());
-        } catch (AmpliacionException e) {
-            throw new RuntimeException(e);
         } finally {
             if (conexion != null) {
                 ConfigMySql.cerrarConexion(conexion);
@@ -266,6 +260,7 @@ public class Ampliacion {
         }
     }
 
+
     private static void extraerRankingSocios(List<String> socios, ResultSet rs) throws SQLException {
         while (rs.next()) {
             String dni = rs.getString("dni_socio");
@@ -273,6 +268,29 @@ public class Ampliacion {
             int total = rs.getInt("total");
 
             String cadena = "Socio [DNI: " + dni + ", Nombre: " + nombre + ", Préstamos: " + total + "]";
+            socios.add(cadena);
+        }
+    }
+
+    private static void crearLibro2(List<String> libros, ResultSet rs) throws SQLException {
+        while (rs.next()) {
+            // Usamos los alias definidos en la consulta para evitar errores
+            String isbn = rs.getString("isbn_libro");
+            String titulo = rs.getString("titulo_libro");
+            int total = rs.getInt("total");
+
+            String cadena = "Libro [ISBN: " + isbn + ", Título: " + titulo + ", Veces prestado: " + total + "]";
+            libros.add(cadena);
+        }
+    }
+
+    private static void crearSocio2(List<String> socios, ResultSet rs) throws SQLException {
+        while (rs.next()) {
+            String dni = rs.getString("dni_socio");
+            String nombre = rs.getString("nombre_socio");
+            int num_prestamos = rs.getInt("total");
+
+            String cadena = "Socio [DNI: " + dni + ", Nombre: " + nombre + ", Prestamos: " + num_prestamos + "]";
             socios.add(cadena);
         }
     }
