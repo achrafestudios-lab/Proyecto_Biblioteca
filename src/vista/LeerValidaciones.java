@@ -53,7 +53,7 @@ public class LeerValidaciones {
         boolean validado;
 
         do {
-            puntuacion = Teclado.leerNatural("Puntuacion: ");
+            puntuacion = Teclado.leerReal("Puntuacion: ");
             validado = Validaciones.validarPuntuacion(puntuacion);
 
             if (!validado) {
@@ -97,7 +97,7 @@ public class LeerValidaciones {
             validado = Validaciones.validarDNI(dni);
 
             if (!validado) {
-                System.err.println("DNI invalido. (8 numeros y una letra al final)");
+                System.err.println("DNI invalido. El DNI debe tener 8 números seguidos de una sola letra (ej: 12345678Z)");
             }
         } while (!validado);
 

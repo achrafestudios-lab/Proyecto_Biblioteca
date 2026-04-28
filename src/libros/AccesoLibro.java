@@ -33,19 +33,18 @@ public class AccesoLibro {
             String isbn = libro.getIsbn();
             String titulo = libro.getTitulo();
             String escritor = libro.getEscritor();
-            int anio_publicaccion = libro.getAnioPublicacion();
+            int anio_publicacion = libro.getAnioPublicacion();
             double puntuacion = libro.getPuntuacion();
 
             sentencia.setString(1, isbn);
             sentencia.setString(2, titulo);
             sentencia.setString(3, escritor);
-            sentencia.setInt(4, anio_publicaccion);
+            sentencia.setInt(4, anio_publicacion);
             sentencia.setDouble(5, puntuacion);
 
             columnasInsertadas = sentencia.executeUpdate();
 
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
             throw new BDException(BDException.ERROR_QUERY + e.getMessage());
         } finally {
             if (conexion != null) {
@@ -90,7 +89,6 @@ public class AccesoLibro {
                 throw new LibroException(LibroException.ERROR_NO_EXISTE_EL_LIBRO);
             }
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
             throw new BDException(BDException.ERROR_QUERY + e.getMessage());
         } finally {
             if (conexion != null) {
@@ -224,7 +222,7 @@ public class AccesoLibro {
      * @return Devuelve una lista de libros del autor ordenados por puntuacion descendente
      * @throws BDException Gestion de excepciones de base de datos
      */
-    public static List<Libro> consultarLibrosPorAutorYPuntuacionDes(String autor) throws BDException {
+    public static List<Libro> consultarLibrosPorAutorYPuntuacionDes(String autor) throws BDException, LibroException {
         List<Libro> LibrosAux = new ArrayList<>();
         PreparedStatement ps;
         Connection conexion = null;
@@ -240,6 +238,10 @@ public class AccesoLibro {
             ResultSet resultados = ps.executeQuery();
 
             crearLibro(LibrosAux, resultados);
+
+            if (LibrosAux.isEmpty()) {
+                throw new LibroException(LibroException.ERROR_NO_EXISTE_EL_LIBRO_AUTOR);
+            }
         } catch (SQLException e) {
             throw new BDException(BDException.ERROR_QUERY + e.getMessage());
         } catch (BDException e) {
@@ -336,10 +338,10 @@ public class AccesoLibro {
             String isbn = resultados.getString("isbn");
             String titulo = resultados.getString("titulo");
             String escritor = resultados.getString("escritor");
-            int anio_publicaccion = resultados.getInt("anio_publicacion");
+            int anio_publicacion = resultados.getInt("anio_publicacion");
             double puntuacion = resultados.getDouble("puntuacion");
 
-            Libro LibroAux = new Libro(codigo, isbn, titulo, escritor, anio_publicaccion, puntuacion);
+            Libro LibroAux = new Libro(codigo, isbn, titulo, escritor, anio_publicacion, puntuacion);
 
             librosAux.add(LibroAux);
 

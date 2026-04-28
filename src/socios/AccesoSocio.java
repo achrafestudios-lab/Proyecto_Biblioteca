@@ -179,7 +179,7 @@ public class AccesoSocio {
         Map<Libro, Object> libros = new TreeMap<>(new OrdenarPorCodigoLibroComparator());
         Connection conexion = null;
         PreparedStatement ps;
-        dni = dni.toLowerCase();
+        dni = dni.toUpperCase();
 
         try {
             conexion = ConfigMySql.abrirConexion();

@@ -5,8 +5,19 @@ public class Validaciones {
         return isbn.matches("^97[89][0-9]{10}$");
     }
 
-    public static boolean validarDNI(String dni){
-        return dni.matches("^[0-9]{8}[A-Z]$");
+    public static boolean validarDNI(String dni) {
+
+        if (dni == null || !dni.matches("^[0-9]{8}[A-Z]$")) {
+            return false;
+        }
+
+        int numero = Integer.parseInt(dni.substring(0, 8));
+        char letraProporcionada = dni.charAt(8);
+
+        String letrasValidas = "TRWAGMYFPDXBNJZSQVHLCKE";
+        char letraCorrecta = letrasValidas.charAt(numero % 23);
+
+        return letraProporcionada == letraCorrecta;
     }
 
     public static boolean validarCorreo(String correo){
@@ -26,7 +37,7 @@ public class Validaciones {
     }
 
     public static boolean validarAnio(int anio){
-        return anio >= 0 && anio <= 9999;
+        return anio > 0 && anio <= 9999;
     }
 
     public static boolean validarPuntuacion(double puntuacion){
