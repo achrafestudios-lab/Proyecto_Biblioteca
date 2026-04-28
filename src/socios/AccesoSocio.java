@@ -144,7 +144,7 @@ public class AccesoSocio {
      * @return Devuelve una lista de socios que coinciden con la localidad ordenados por nombre ascendente
      * @throws SociosException Gestion de excepciones de socios
      */
-    public static List<Socio> consultarSociosPorLocalidadOrdenadoPorNombreAsc(String localidad) throws SociosException {
+    public static List<Socio> consultarSociosPorLocalidadOrdenadoPorNombreAsc(String localidad) throws BDException, SociosException {
         List<Socio> socios = new LinkedList<>();
         Connection conexion = null;
         PreparedStatement ps;
