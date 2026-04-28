@@ -1,5 +1,9 @@
 package vista;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
 public class Validaciones {
     public static boolean validarISBN(String isbn){
         return isbn.matches("^97[89][0-9]{10}$");
@@ -33,11 +37,23 @@ public class Validaciones {
     }
 
     public static boolean validarFecha(String fecha){
-        return fecha.matches("^\\d{4}-\\d{2}-\\d{2}$");
+        try {
+            LocalDate fechaInput = LocalDate.parse(fecha); // Valida formato y lógica
+            LocalDate hoy = LocalDate.now(); // Obtiene la fecha actual
+
+            if (fechaInput.isAfter(hoy)) {
+                return false;
+            }
+
+            return true;
+        } catch (DateTimeParseException e) {
+            return false;
+        }
     }
 
     public static boolean validarAnio(int anio){
-        return anio > 0 && anio <= 9999;
+        LocalDate fecha = LocalDate.now();
+        return anio > 0 && anio <= fecha.getYear();
     }
 
     public static boolean validarPuntuacion(double puntuacion){

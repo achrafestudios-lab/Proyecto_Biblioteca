@@ -77,7 +77,7 @@ public class LeerValidaciones {
             validado = Validaciones.validarFecha(fecha);
 
             if (!validado) {
-                System.err.println("Fecha invalida. (YYYY-MM-DD)");
+                System.err.println("Fecha invalida. (YYYY-MM-DD) o la fecha es futura");
             }
         } while (!validado);
 

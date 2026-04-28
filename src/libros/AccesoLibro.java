@@ -19,14 +19,23 @@ public class AccesoLibro {
      * @return Devuelve true si se ha insertado de lo contrast false
      * @throws BDException Gestion de excepciones de base de datos
      */
-    public static boolean insertarLibros(Libro libro) throws BDException {
+    public static boolean insertarLibros(Libro libro) throws BDException,  LibroException {
         Connection conexion = null;
-        int columnasInsertadas;
+        int columnasInsertadas = 0;
 
         try {
             conexion = ConfigMySql.abrirConexion();
 
-            String sentenciaInsertarDept = "INSERT INTO libro( isbn, titulo, escritor, anio_publicacion, puntuacion) VALUES(?,?,?,?,?);";
+            String queryCheck = "SELECT 1 FROM libro WHERE isbn = ?";
+            PreparedStatement psCheck = conexion.prepareStatement(queryCheck);
+            psCheck.setString(1, libro.getIsbn());
+            ResultSet rsLibro = psCheck.executeQuery();
+
+            if (rsLibro.next()) {
+                throw new LibroException(LibroException.ERROR_EXISTE_EL_LIBRO);
+            }
+
+            String sentenciaInsertarDept = "INSERT INTO libro(isbn, titulo, escritor, anio_publicacion, puntuacion) VALUES(?,?,?,?,?);";
 
             PreparedStatement sentencia = conexion.prepareStatement(sentenciaInsertarDept);
 
@@ -53,7 +62,6 @@ public class AccesoLibro {
         }
 
         return columnasInsertadas > 0;
-
     }
 
     /**

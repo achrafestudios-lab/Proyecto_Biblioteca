@@ -18,12 +18,21 @@ public class AccesoSocio {
      * @param socio Socio a insertar
      * @return Devuelve true si se ha insertado correctamente false en caso contrario
      */
-    public static boolean insertarSocio(Socio socio) throws BDException{
+    public static boolean insertarSocio(Socio socio) throws BDException, SociosException{
         Connection conexion = null;
         PreparedStatement ps;
 
         try {
             conexion = ConfigMySql.abrirConexion();
+
+            String queryCheck = "SELECT 1 FROM socio WHERE dni = ?";
+            PreparedStatement psCheck = conexion.prepareStatement(queryCheck);
+            psCheck.setString(1, socio.getDni());
+            ResultSet rsLibro = psCheck.executeQuery();
+
+            if (rsLibro.next()) {
+                throw new SociosException(SociosException.SOCIO_EXISTENTE);
+            }
 
             String query = "INSERT INTO socio (dni, nombre, domicilio, telefono, correo) VALUES (?,?,?,?,?)";
             ps = conexion.prepareStatement(query);
