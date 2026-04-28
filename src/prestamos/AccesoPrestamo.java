@@ -149,8 +149,8 @@ public class AccesoPrestamo {
         Connection conexion = null;
         LocalDate fechaInicio = LocalDate.now();
         LocalDate fechaFin = fechaInicio.plusDays(30);
-        String fecha = fechaInicio.getYear() + "-" + fechaInicio.getMonthValue() + "-" + fechaInicio.getDayOfMonth();
-        String fechaF = fechaFin.getYear() + "-" + fechaFin.getMonthValue() + "-" + fechaFin.getDayOfMonth();
+        String fecha = fechaInicio.toString();
+        String fechaF = fechaFin.toString();
 
         try {
             conexion = ConfigMySql.abrirConexion();
@@ -249,8 +249,7 @@ public class AccesoPrestamo {
     public static void actualizarPrestamo(String isbn, String dni, String fecha_inicio) throws BDException, PrestamosException {
         Connection conexion = null;
         LocalDate fechaInicio = LocalDate.now();
-        String fecha_devolucion = fechaInicio.getYear() + "-" + fechaInicio.getMonthValue() + "-" + fechaInicio.getDayOfMonth();
-
+        String fecha_devolucion = fechaInicio.toString();
 
         try {
             conexion = ConfigMySql.abrirConexion();
@@ -269,7 +268,7 @@ public class AccesoPrestamo {
 
             int insertado = sentencia.executeUpdate();
 
-            if(insertado == 0){
+            if (insertado == 0) {
                 throw new PrestamosException(PrestamosException.ERROR_NO_SE_PUDO_ACTUALIZAR_PRESTAMO);
             }
         } catch (SQLException e) {
@@ -280,7 +279,5 @@ public class AccesoPrestamo {
                 ConfigMySql.cerrarConexion(conexion);
             }
         }
-
     }
-
 }
