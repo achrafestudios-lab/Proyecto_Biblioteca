@@ -56,6 +56,11 @@ public class Validaciones {
         return anio > 0 && anio <= fecha.getYear();
     }
 
-    public static boolean validarPuntuacion(double puntuacion){
-        return puntuacion >= 0 && puntuacion <= 10 && (puntuacion * 10) % 1 == 0;    }
+    public static boolean validarPuntuacion(double puntuacion) {
+        if (puntuacion < 0 || puntuacion > 10) return false;
+
+        // Multiplicamos por 10 y verificamos que el residuo sea casi cero
+        double residuo = (puntuacion * 10) % 1;
+        return Math.abs(residuo) < 0.0001 || Math.abs(residuo) > 0.9999;
+    }
 }
