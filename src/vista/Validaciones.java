@@ -41,6 +41,5 @@ public class Validaciones {
     }
 
     public static boolean validarPuntuacion(double puntuacion){
-        return puntuacion >= 0 && puntuacion <= 10;
-    }
+        return puntuacion >= 0 && puntuacion <= 10 && (puntuacion * 10) % 1 == 0;    }
 }
